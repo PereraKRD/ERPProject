@@ -1,0 +1,111 @@
+@page "/ModuleListPage"
+@using ERP.Domain.Core.Entity;
+@using ERP.Application.AcademicApp.Modules.Interfaces
+
+@inject NavigationManager NavigationManager
+@inject IViewTeachingModuleByNameUseCase ViewTeachingModuleByNameUseCase
+
+<MudTable Items="@_modules">
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>Code</MudTh>
+        <MudTh>Semester</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nr">@context.Name</MudTd>
+        <MudTd DataLabel="Sign">@context.Name</MudTd>
+        <MudTd DataLabel="Name">@context.Semester</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+@code {
+
+    private List<Module> _modules = new List<Module>();
+    [Parameter]
+    public string SearchTerm { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        _modules = (await ViewTeachingModuleByNameUseCase.ExecuteAsync("")).ToList();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _modules = (await ViewTeachingModuleByNameUseCase.ExecuteAsync(SearchTerm)).ToList();
+    }   
+}
+
+
+
+
+@*<MudPaper Width="infinity">
+    <MudList Clickable="true" @bind-SelectedItem="selectedItem" @bind-SelectedValue="selectedValue">
+        <MudListItem Text="Sparkling Water" Value="1"/>
+        <MudListItem Text="Semester 01">
+            <NestedList>
+                <MudListItem Text="Earl Grey" Value="2" />
+                <MudListItem Text="Matcha"  Value="3"/>
+                <MudListItem Text="Pu'er"  Value="4"/>
+            </NestedList>
+        </MudListItem>
+        <MudListItem Text="Semester 02">
+            <NestedList>
+                <MudListItem Text="Irish Coffee"  Value="5"/>
+                <MudListItem Text="Double Espresso"  Value="6"/>
+                <MudListItem Text="Cafe Latte"  Value="7"/>
+            </NestedList>
+        </MudListItem>
+        <MudListItem Text="Semester 03">
+            <NestedList>
+                <MudListItem Text="Earl Grey" Value="2" />
+                <MudListItem Text="Matcha"  Value="3"/>
+                <MudListItem Text="Pu'er"  Value="4"/>
+            </NestedList>
+        </MudListItem>
+        <MudListItem Text="Semester 04">
+            <NestedList>
+                <MudListItem Text="Earl Grey" Value="2" />
+                <MudListItem Text="Matcha"  Value="3"/>
+                <MudListItem Text="Pu'er"  Value="4"/>
+            </NestedList>
+        </MudListItem>
+        <MudListItem Text="Semester 05">
+            <NestedList>
+                <MudListItem Text="Earl Grey" Value="2" />
+                <MudListItem Text="Matcha"  Value="3"/>
+                <MudListItem Text="Pu'er"  Value="4"/>
+            </NestedList>
+        </MudListItem>
+        <MudListItem Text="Semester 06">
+            <NestedList>
+                <MudListItem Text="Earl Grey" Value="2" />
+                <MudListItem Text="Matcha"  Value="3"/>
+                <MudListItem Text="Pu'er"  Value="4"/>
+            </NestedList>
+        </MudListItem>
+        <MudListItem Text="Semester 07">
+            <NestedList>
+                <MudListItem Text="Earl Grey" Value="2" />
+                <MudListItem Text="Matcha"  Value="3"/>
+                <MudListItem Text="Pu'er"  Value="4"/>
+            </NestedList>
+        </MudListItem>
+        <MudListItem Text="Semester 08">
+            <NestedList>
+                <MudListItem Text="Earl Grey" Value="2" />
+                <MudListItem Text="Matcha"  Value="3"/>
+                <MudListItem Text="Pu'er"  Value="4"/>
+            </NestedList>
+        </MudListItem>
+        
+    </MudList>
+</MudPaper>
+@code
+{
+    MudListItem selectedItem;
+    object selectedValue = 1;
+}*@

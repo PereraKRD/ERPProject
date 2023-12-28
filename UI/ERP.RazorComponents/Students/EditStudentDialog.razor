@@ -1,0 +1,40 @@
+﻿@using ERP.Domain.Core.Entity
+@inject ISnackbar Snackbar
+
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.DeleteForever" Class="mr-3 mb-n1" />
+            Edit Student
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField Value="@student.StudentId" Label="Student ID" ReadOnly="true" />
+        <MudTextField Value="@student.FirstName" Label="First Name" />
+        <MudTextField Value="@student.LastName" Label="Last Name" />
+        <MudTextField Value="@student.Address1" Label="Address"  />
+        <MudTextField Value="@student.Email" Label="Address" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Error" OnClick="SaveStudent">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public Student student { get; set; } = new ();
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+    private void SaveStudent()
+    {
+        
+        Snackbar.Add("Student Edited", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(student.StudentId));
+    }
+}

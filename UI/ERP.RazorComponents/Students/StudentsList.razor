@@ -1,0 +1,53 @@
+﻿@using ERP.Application.StudentApp.Students.Interfaces
+@using ERP.Domain.Core.Entity;
+
+@inject NavigationManager NavigationManager
+@inject IViewStudentsByNameUseCase ViewStudentsByNameUseCase
+
+<MudTable Items="@_students">
+    <HeaderContent>
+        <MudTh>Number</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Email</MudTh>
+        <MudTh>Action</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nr">@context.RegistrationNum</MudTd>
+        <MudTd DataLabel="Sign">@context.FirstName @context.LastName </MudTd>
+        <MudTd DataLabel="Name">@context.Email</MudTd>
+        <MudTd DataLabel="">
+            <MudImage Src="images/woman.png" Width="40"/>
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+@code {
+
+    
+
+    private List<Student> _students = new List<Student>();
+    [Parameter]
+    public string SearchTerm { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        _students = (await ViewStudentsByNameUseCase.ExecuteAsync("")).ToList();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _students = (await ViewStudentsByNameUseCase.ExecuteAsync(SearchTerm)).ToList();
+    }   
+
+    
+    void Edit(int studentId)
+    {
+        NavigationManager.NavigateTo($"/editstudent/{studentId}");
+        
+    }
+
+}

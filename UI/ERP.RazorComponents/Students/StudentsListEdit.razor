@@ -1,0 +1,64 @@
+﻿@using ERP.Application.StudentApp.Students.Interfaces
+@using ERP.Domain.Core.Entity;
+
+@inject NavigationManager NavigationManager
+@inject IViewStudentsByNameUseCase ViewStudentsByNameUseCase
+@inject IDialogService DialogService
+
+<MudTable Items="@_students">
+    <HeaderContent>
+        <MudTh>Number</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Email</MudTh>
+        <MudTh>Action</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nr">@context.RegistrationNum</MudTd>
+        <MudTd DataLabel="Sign">@context.FirstName @context.LastName</MudTd>
+        <MudTd DataLabel="Name">@context.Email</MudTd>
+        <MudTd DataLabel="">
+            <MudFab OnClick="@(()=> EditStudent(@context))"  Color="Color.Primary" 
+            StartIcon="@Icons.Material.Filled.Edit" Size="Size.Small" />
+            <MudFab Color="Color.Warning" StartIcon="@Icons.Material.Filled.Delete" Size="Size.Small" />
+            <MudFab Color="Color.Success" StartIcon="@Icons.Material.Filled.AccessTime" Size="Size.Small"/>
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+@code {
+
+    private List<Student> _students = new List<Student>();
+    [Parameter]
+    public string SearchTerm { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        _students = (await ViewStudentsByNameUseCase.ExecuteAsync("")).ToList();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _students = (await ViewStudentsByNameUseCase.ExecuteAsync(SearchTerm)).ToList();
+    }   
+
+
+    
+
+    async Task EditStudent(Student student)
+    {
+        var parameters = new DialogParameters<EditStudentDialog> { { x => x.student, student } };
+
+        var dialog = await DialogService.ShowAsync<EditStudentDialog>("Save",parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            
+        }
+    }
+
+}

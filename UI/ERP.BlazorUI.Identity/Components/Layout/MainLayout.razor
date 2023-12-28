@@ -1,0 +1,51 @@
+﻿@inherits LayoutComponentBase
+<MudThemeProvider @bind-IsDarkMode="@themeOn"/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
+
+
+
+<MudLayout>
+    <MudAppBar Elevation="1" Color="Color.Transparent">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                       Color="Color.Inherit"
+                       Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+
+        <MudText Typo="Typo.h5" Class="px-4">Faculty of Engineering</MudText>
+        <!--
+            <MudMenu Label="Open Menu" Variant="Variant.Filled" Color="Color.Inherit">
+                <MudMenuItem>OnClick Only</MudMenuItem>
+                <MudMenuItem>OnTouch Only</MudMenuItem>
+                <MudMenuItem>OnTouch Only</MudMenuItem>
+            </MudMenu>
+
+            <MudMenu Label="Icon Color" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.KeyboardArrowDown" Color="Color.Inherit"
+                     IconColor="Color.Primary">
+                <MudMenuItem>Enlist</MudMenuItem>
+                <MudMenuItem>Barracks</MudMenuItem>
+                <MudMenuItem>Armory</MudMenuItem>
+            </MudMenu>
+         -->
+        <MudSpacer />
+        <MudButton StartIcon="@Icons.Material.Filled.Login" Href="/account/login"
+                       Color="Color.Inherit" > Login </MudButton>
+        <MudButton StartIcon="@Icons.Material.Filled.Notes" Href="/account/register"
+                       Color="Color.Inherit" Edge="Edge.End"> Register </MudButton>
+        <MudSwitch @bind-Checked="@themeOn" Label="DarkMode" Color="Color.Inherit" />
+    </MudAppBar>
+
+    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+        <NavMenu />
+    </MudDrawer>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+@code {
+    bool _drawerOpen = true;
+    bool themeOn = false;
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}

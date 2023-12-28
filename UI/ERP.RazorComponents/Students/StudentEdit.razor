@@ -1,0 +1,133 @@
+﻿
+@using ERP.Application.StudentApp.Students.Interfaces
+@using ERP.Domain.Core.Entity
+@using FluentValidation
+@inject IEditStudentUseCase EditStudentUseCase
+@inject IViewStudentById ViewStudentById
+
+<h3>AddStudent</h3>
+
+
+<MudCard>
+    <MudForm Model="@model" @ref="@form" Validation="@(studentValidator.ValidateValue)"
+             ValidationDelay="0">
+        <MudCardContent>
+            <MudTextField @bind-Value="model.FirstName"
+                          For="@(() => model.FirstName)"
+                          Immediate="true"
+                          Label="FirstName" />
+
+            <MudTextField @bind-Value="model.LastName"
+                          For="@(() => model.LastName)"
+                          Immediate="true"
+                          Label="LastName" />
+            <MudTextField @bind-Value="model.RegistrationNum"
+                          For="@(() => model.RegistrationNum)"
+                          Immediate="true"
+                          Label="Registration Number" />
+
+            <MudTextField @bind-Value="model.Email"
+                          For="@(() => model.Email)"
+                          Immediate="true"
+                          Label="Email" />
+
+            <MudTextField @bind-Value="model.Address1"
+                          For="@(() => model.Address1)"
+                          Immediate="true"
+                          Label="Address" />
+
+            <MudTextField @bind-Value="model.Phone"
+                          For="@(() => model.Phone)"
+                          Immediate="true"
+                          Label="Phone" />
+
+
+        </MudCardContent>
+    </MudForm>
+    <MudCardActions>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Class="ml-auto"
+                   OnClick="@(async () => await Submit())">Update</MudButton>
+    </MudCardActions>
+</MudCard>
+
+
+
+@code {
+    private Student model;
+
+   
+
+    [Parameter]
+    public int StudentId { get; set; }
+
+    StudentModelValidator studentValidator = new StudentModelValidator();
+    MudForm form;
+
+    public class StudentModelValidator : AbstractValidator<Student>
+    {
+        public StudentModelValidator()
+        {
+            RuleFor(x => x.FirstName)
+                .NotEmpty()
+                .Length(1, 100);
+
+            RuleFor(x => x.LastName)
+                .NotEmpty()
+                .Length(1, 100);
+
+            RuleFor(x => x.Email)
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .EmailAddress()
+                .MustAsync(async (value, cancellationToken) => await IsUniqueAsync(value));
+
+
+            RuleFor(x => x.Address1)
+                .NotEmpty()
+                .Length(1, 100);
+
+
+        }
+
+        private async Task<bool> IsUniqueAsync(string email)
+        {
+            // Simulates a long running http call
+            await Task.Delay(2000);
+            return email.ToLower() != "test@test.com";
+        }
+
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<Student>
+                                .CreateWithOptions((Student)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
+
+    }
+
+
+
+    private async Task Submit()
+    {
+        await form.Validate();
+
+        if (form.IsValid)
+        {
+            await EditStudentUseCase.ExecuteAsync(model);
+            
+        }
+        
+
+    }
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        model = await ViewStudentById.ExecuteAsync(StudentId);
+    }
+}
