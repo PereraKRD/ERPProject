@@ -21,8 +21,6 @@ namespace ERP.Domain.Core.Entity
         public ICollection<ModuleOfferingFirstExaminer> FirstExaminers { get; set; }
         public ICollection<ModuleOfferingSecondExaminer> SecondExaminers { get; set; }
         public ICollection<ModuleRegistration> Registrations { get; set; }
-
         public ICollection<Evaluation> Evalutions { get; set; }
-
     }
 }

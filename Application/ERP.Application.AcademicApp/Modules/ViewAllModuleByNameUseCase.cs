@@ -4,12 +4,12 @@ using ERP.Domain.Core.Entity;
 
 namespace ERP.Application.AcademicApp.Modules;
 
-public class ViewTeachingModuleByNameUseCase : IViewTeachingModuleByNameUseCase
+public class ViewAllModuleByNameUseCase : IViewAllModuleByNameUseCase
 {
     private readonly  IModuleRepository moduleRepository;
 
 
-    public ViewTeachingModuleByNameUseCase(IModuleRepository moduleRepository)
+    public ViewAllModuleByNameUseCase(IModuleRepository moduleRepository)
     {
         this.moduleRepository = moduleRepository;
     }
