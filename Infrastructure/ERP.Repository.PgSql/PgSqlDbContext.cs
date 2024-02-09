@@ -63,6 +63,7 @@ namespace ERP.Repository.PgSql
         public DbSet<Student> Students { get; set; }
         public DbSet<Module> Modules { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
+        public DbSet<ModuleOffering> ModuleOfferings { get; set; }
         public DbSet<ModuleOfferingTeacher> ModuleTeachers { get; set;}
         public DbSet<ModuleOfferingFirstExaminer> ModuleFirstExaminers { get; set; }
         public DbSet<ModuleOfferingSecondExaminer> ModuleSecondExaminers { get; set; }

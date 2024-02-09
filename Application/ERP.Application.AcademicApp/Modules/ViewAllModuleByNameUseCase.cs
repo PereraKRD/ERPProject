@@ -4,20 +4,19 @@ using ERP.Domain.Core.Entity;
 
 namespace ERP.Application.AcademicApp.Modules;
 
-public class ViewAllModuleByNameUseCase : IViewAllModuleByNameUseCase
+public class ViewTeacherModuleByNameUseCase : IViewTeacherModuleByNameUseCase
 {
     private readonly  IModuleRepository moduleRepository;
 
 
-    public ViewAllModuleByNameUseCase(IModuleRepository moduleRepository)
+    public ViewTeacherModuleByNameUseCase(IModuleRepository moduleRepository)
     {
         this.moduleRepository = moduleRepository;
     }
 
-    public async Task<IEnumerable<Module>>
-        ExecuteAsync(string name = "")
+    public async Task<IQueryable<ModuleOffering>> ExecuteAsync(int id)
     {
-        return await moduleRepository.GetTeacherModulesAsync(name);
+        return await moduleRepository.GetTeacherModulesAsync(id);
     }
 }
 

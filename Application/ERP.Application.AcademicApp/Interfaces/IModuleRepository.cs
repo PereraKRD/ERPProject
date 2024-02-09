@@ -4,5 +4,5 @@ namespace ERP.Application.AcademicApp.Interfaces;
 
 public interface IModuleRepository
 {
-    Task<IEnumerable<Module>> GetTeacherModulesAsync(string name);
+    Task<IQueryable<ModuleOffering>> GetTeacherModulesAsync(int name);
 }

@@ -14,10 +14,14 @@ namespace ERP.Repository.PgSql
 			_factory = factory;
 		}
 		
-		public async Task<IEnumerable<Module>> GetTeacherModulesAsync(string name)
+		public async Task<IQueryable<ModuleOffering>> GetTeacherModulesAsync(int id)
 		{
-			using var _context = _factory.CreateDbContext();
-			return await _context.Modules.ToListAsync();
+			var _context = _factory.CreateDbContext();
+			return  _context.ModuleOfferings
+				.Include(mo => mo.Module) // Include related modules if necessary
+				.Where(mo => mo.Coordinator.TeacherId == id);
+			
+
 		}
 	}
 }
