@@ -23,6 +23,14 @@ namespace ERP.Repository.PgSql
 			
 
 		}
+		
+		public async Task<IQueryable<ModuleOffering>> GetModuleOfferingAsync(int moduleOfferingId)
+		{
+			var _context = _factory.CreateDbContext();
+			return  _context.ModuleOfferings
+				.Where(mo => mo.ModuleOfferingId== moduleOfferingId);
+			
+		}
 	}
 }
 

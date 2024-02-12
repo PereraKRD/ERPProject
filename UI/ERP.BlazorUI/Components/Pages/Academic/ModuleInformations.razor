@@ -1,0 +1,36 @@
+@page "/ModuleManagementTabs/{moduleOfferingId}"
+
+@using ERP.Application.AcademicApp.Modules.Interfaces
+@using ERP.Domain.Core.Entity
+@inject IGetModuleOfferingByIdUseCase GetModuleOfferingByIdUseCase
+
+<h3>Module Information</h3>
+
+@if (moduleOffering != null)
+{
+    <div>
+        <h4>@moduleOffering.Module.Name</h4>
+    </div>
+}
+else
+{
+    <p>Loading...</p>
+}
+
+@code {
+    [Parameter]
+    public int moduleOfferingId { get; set; }
+
+    private ModuleOffering moduleOffering;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadModuleOfferingInfoAsync();
+    }
+
+    private async Task LoadModuleOfferingInfoAsync()
+    {
+        // var _moduleOfferingId = 1;
+        // moduleOffering = await GetModuleOfferingByIdUseCase.ExecuteAsync(_moduleOfferingId);
+    }
+}

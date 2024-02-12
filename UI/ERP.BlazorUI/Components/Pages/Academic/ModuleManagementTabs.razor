@@ -1,0 +1,20 @@
+@page "/ModuleManagementTabs"
+
+<MudTabs Outlined="true" Position="@Position" Rounded="true" Border="true"
+    ApplyEffectsToContainer="true" Class="mt-8" PanelClass="pa-6">
+    <MudTabPanel Text="Coordinating Modules">
+        <ModuleListPage></ModuleListPage>
+    </MudTabPanel>
+    <MudTabPanel Text="FirstExaminer Modules">
+        <MudText>FirstExaminer Modules</MudText>
+    </MudTabPanel>
+    <MudTabPanel Text="SecondExaminer Modules">
+        <MudText>SecondExaminer Modules</MudText>
+    </MudTabPanel>
+</MudTabs>
+
+
+@code {
+    public Position Position { get; set; } = Position.Top;
+    
+}
