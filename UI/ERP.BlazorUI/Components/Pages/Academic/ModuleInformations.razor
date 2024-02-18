@@ -1,27 +1,63 @@
-@page "/ModuleManagementTabs/{moduleOfferingId}"
+@page "/ModuleManagementTabs/{ModuleOfferingId:int}"
 
 @using ERP.Application.AcademicApp.Modules.Interfaces
+@using ERP.BlazorUI.Components.Pages.Academic.Components
 @using ERP.Domain.Core.Entity
 @inject IGetModuleOfferingByIdUseCase GetModuleOfferingByIdUseCase
+@inject IDialogService DialogService
 
-<h3>Module Information</h3>
-
-@if (moduleOffering != null)
+@if (_moduleOffering != null)
 {
-    <div>
-        <h4>@moduleOffering.Module.Name</h4>
+    <div class="p-2 mb-3">
+        <h3 class="pa-3"> @_moduleOffering.Module.Code @_moduleOffering.Module.Name</h3>
     </div>
+    <MudPaper>
+        <MudTabs Outlined="true">
+            <MudTabPanel Text="Assignments" Icon="@Icons.Material.Filled.Assignment">
+                <MudCard Class="mb-5">
+                    <MudCardHeader Style="@($"color:{Colors.Grey.Darken4}; background:{Colors.Grey.Lighten1};")">
+                        <div class="d-flex justify-space-between flex-grow-1">
+                            <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="OpenCreateEvaluationDialog">Create</MudButton>
+
+                        </div>
+                    </MudCardHeader>
+                    <MudCardContent Style="@($"color:{Colors.Grey.Darken4}; background:{Colors.Grey.Lighten3};")">
+                        <MudListItem Text="Assignment 1" Value="2" />
+                        <MudListItem Text="Assignment 2" Value="3" />
+                        <MudListItem Text="Assignment 3" Value="4" />
+                    </MudCardContent>
+                </MudCard>
+            </MudTabPanel>
+
+            <MudTabPanel Text="Student List" Icon="@Icons.Material.Filled.People">
+
+            </MudTabPanel>
+
+            <MudTabPanel Text="Results" Icon="@Icons.Material.Filled.TableView">
+                <MudCard Class="mb-5">
+                    <MudCardContent Style="@($"color:{Colors.Grey.Darken4}; background:{Colors.Grey.Lighten3};")">
+                        <div class="d-flex justify-space-around flex-grow-1 gap-1">
+                            <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary">Add Marks</MudButton>
+                            <MudButton StartIcon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary">Edit</MudButton>
+                        </div>
+                    </MudCardContent>
+                </MudCard>
+            </MudTabPanel>
+        </MudTabs>
+    </MudPaper>
 }
 else
 {
-    <p>Loading...</p>
+    <p>Module offering information not found.</p>
 }
+
+
 
 @code {
     [Parameter]
-    public int moduleOfferingId { get; set; }
+    public int ModuleOfferingId { get; set; }
 
-    private ModuleOffering moduleOffering;
+    private ModuleOffering? _moduleOffering;
 
     protected override async Task OnInitializedAsync()
     {
@@ -30,7 +66,28 @@ else
 
     private async Task LoadModuleOfferingInfoAsync()
     {
-        // var _moduleOfferingId = 1;
-        // moduleOffering = await GetModuleOfferingByIdUseCase.ExecuteAsync(_moduleOfferingId);
+        try
+        {
+            _moduleOffering = await GetModuleOfferingByIdUseCase.ExecuteAsync(ModuleOfferingId);
+        }
+        catch (Exception ex)
+        {
+            // Handle the exception appropriately, such as logging or displaying an error message.
+            Console.WriteLine($"An error occurred while loading module offering: {ex.Message}");
+        }
     }
+    
+    private async Task OpenCreateEvaluationDialog()
+    {
+        var dialog = DialogService.Show<CreateEvaluationDialog>("Create Evaluation");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var newEvaluation = (Evaluation)result.Data;
+            // Add logic to save the new evaluation to the ModuleOffering
+            Console.WriteLine($"New Evaluation Created: Type {newEvaluation.Type}, Final Marks {newEvaluation.FinalMarks}, Total Marks {newEvaluation.TotalMarks}");
+            // Refresh the UI or perform other actions as needed
+        }
+    }
+
 }

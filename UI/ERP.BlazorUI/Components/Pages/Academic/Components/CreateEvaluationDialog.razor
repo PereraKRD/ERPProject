@@ -1,0 +1,32 @@
+@using ERP.Domain.Core.Entity
+
+<MudDialog>
+    <DialogContent>
+        <EditForm Model="@_evaluation">
+            <MudTextField T="int" Label="Evaluation Type" @bind-Value="@_evaluation.Type" FullWidth />
+            <MudTextField T="double" Label="Final Marks" @bind-Value="@_evaluation.FinalMarks" FullWidth />
+            <MudTextField T="double" Label="Marks" @bind-Value="@_evaluation.Marks" FullWidth />
+            <MudTextField T="int" Label="Total Marks" @bind-Value="@_evaluation.TotalMarks" FullWidth />
+        </EditForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+                <MudButton Color="Color.Primary" OnClick="HandleValidSubmit">Submit</MudButton>
+
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    private Evaluation _evaluation = new Evaluation();
+
+    private void HandleValidSubmit()
+    {
+        // Logic to save the _evaluation
+        Console.WriteLine("Creating Evaluation...");
+        MudDialog.Close(DialogResult.Ok(_evaluation));
+    }
+    
+    void Cancel() => MudDialog.Cancel();
+}

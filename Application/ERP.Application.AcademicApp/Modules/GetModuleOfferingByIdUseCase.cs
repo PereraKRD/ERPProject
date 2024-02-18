@@ -14,8 +14,8 @@ public class GetModuleOfferingByIdUseCase : IGetModuleOfferingByIdUseCase
         this.moduleRepository = moduleRepository;
     }
 
-    public async Task<IQueryable<ModuleOffering>> ExecuteAsync(int moduleOfferingid)
+    public async Task<ModuleOffering> ExecuteAsync(int moduleOfferingId)
     {
-        return await moduleRepository.GetModuleOfferingAsync(moduleOfferingid);
+        return await moduleRepository.GetModuleOfferingAsync(moduleOfferingId);
     }
 }
