@@ -35,35 +35,22 @@ namespace ERP.Repository.PgSql
 			       ?? throw new Exception($"Module offering with ID {moduleOfferingId} not found.");
 		}
 		
-		public async Task<Evaluation> CreateEvaluationAsync(int moduleOfferingId, int evaluationType, double finalMarks, double marks, int totalMarks)
+		public async Task CreateEvaluationAsync(Evaluation evaluation, int moduleOfferingId)
 		{
-			var _context = _factory.CreateDbContext();
+			using var _context = _factory.CreateDbContext();
 			// Find the module offering
 			var moduleOffering = await _context.ModuleOfferings
 				.FirstOrDefaultAsync(mo => mo.ModuleOfferingId == moduleOfferingId);
-
 			if (moduleOffering == null)
 			{
 				throw new ArgumentException("Module offering not found.", nameof(moduleOfferingId));
 			}
-
-			// Create a new Evaluation instance
-			var evaluation = new Evaluation
+			else
 			{
-				Type = evaluationType,
-				FinalMarks = finalMarks,
-				Marks = marks,
-				TotalMarks = totalMarks,
-				Results = new List<StudentResult>() // Initialize the collection of results
-			};
-
-			// Add the evaluation to the module offering
-			moduleOffering.Evalutions.Add(evaluation);
-
-			// Save changes to the database
-			await _context.SaveChangesAsync();
-
-			return evaluation;
+				moduleOffering.Evalutions.Add(evaluation);
+				await _context.SaveChangesAsync();
+			}
+			
 		}
 		
 		// public async Task AddOrUpdateMarksAsync(int evaluationId, IDictionary<int, double> studentMarks)

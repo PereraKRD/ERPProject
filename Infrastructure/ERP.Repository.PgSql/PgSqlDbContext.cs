@@ -21,7 +21,7 @@ namespace ERP.Repository.PgSql
 
             modelBuilder.Entity<ModuleOfferingTeacher>()
                 .HasOne(mt => mt.ModuleOffering)
-                .WithMany(mt => mt.Teachers)
+                .WithMany(mo => mo.Teachers)
                 .HasForeignKey(mt => mt.ModuleOfferingId);
      
 
@@ -32,17 +32,17 @@ namespace ERP.Repository.PgSql
 
 
             modelBuilder.Entity<ModuleOfferingFirstExaminer>()
-                .HasKey(mf => new {mf.ModuleOfferingId,mf.TeacherId});
+                .HasKey(mf => new { mf.ModuleOfferingId, mf.TeacherId });
 
             modelBuilder.Entity<ModuleOfferingFirstExaminer>()
                 .HasOne(mf => mf.ModuleOffering)
-                .WithMany(mf => mf.FirstExaminers)
-                .HasForeignKey(mf => mf.TeacherId);
+                .WithMany(mo => mo.FirstExaminers) 
+                .HasForeignKey(mf => mf.ModuleOfferingId); // Corrected to use ModuleOfferingId
 
             modelBuilder.Entity<ModuleOfferingFirstExaminer>()
                 .HasOne(mf => mf.Teacher)
-                .WithMany(mf => mf.FirstExaminersModules)
-                .HasForeignKey(mf =>mf.TeacherId);
+                .WithMany(t => t.FirstExaminersModules) 
+                .HasForeignKey(mf => mf.TeacherId);
 
 
             modelBuilder.Entity<ModuleOfferingSecondExaminer>()
@@ -50,12 +50,12 @@ namespace ERP.Repository.PgSql
 
             modelBuilder.Entity<ModuleOfferingSecondExaminer>()
                 .HasOne(ms => ms.ModuleOffering)
-                .WithMany(ms => ms.SecondExaminers)
-                .HasForeignKey(ms => ms.TeacherId);
+                .WithMany(mo => mo.SecondExaminers) 
+                .HasForeignKey(ms => ms.ModuleOfferingId); // Corrected to use ModuleOfferingId
 
             modelBuilder.Entity<ModuleOfferingSecondExaminer>()
                 .HasOne(ms => ms.Teacher)
-                .WithMany(ms => ms.SecondExaminersModules)
+                .WithMany(t => t.SecondExaminersModules) 
                 .HasForeignKey(ms => ms.TeacherId);
 
         }

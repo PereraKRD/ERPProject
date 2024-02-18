@@ -4,7 +4,7 @@
 @using ERP.BlazorUI.Components.Pages.Academic.Components
 @using ERP.Domain.Core.Entity
 @inject IGetModuleOfferingByIdUseCase GetModuleOfferingByIdUseCase
-@inject IDialogService DialogService
+@inject ISnackbar Snackbar
 
 @if (_moduleOffering != null)
 {
@@ -12,15 +12,9 @@
         <h3 class="pa-3"> @_moduleOffering.Module.Code @_moduleOffering.Module.Name</h3>
     </div>
     <MudPaper>
-        <MudTabs Outlined="true">
-            <MudTabPanel Text="Assignments" Icon="@Icons.Material.Filled.Assignment">
+        <MudTabs Outlined="true" @ref="tabs">
+            <MudTabPanel Text="Assignments" Icon="@Icons.Material.Filled.Assignment" @ref="panel01">
                 <MudCard Class="mb-5">
-                    <MudCardHeader Style="@($"color:{Colors.Grey.Darken4}; background:{Colors.Grey.Lighten1};")">
-                        <div class="d-flex justify-space-between flex-grow-1">
-                            <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="OpenCreateEvaluationDialog">Create</MudButton>
-
-                        </div>
-                    </MudCardHeader>
                     <MudCardContent Style="@($"color:{Colors.Grey.Darken4}; background:{Colors.Grey.Lighten3};")">
                         <MudListItem Text="Assignment 1" Value="2" />
                         <MudListItem Text="Assignment 2" Value="3" />
@@ -29,11 +23,15 @@
                 </MudCard>
             </MudTabPanel>
 
-            <MudTabPanel Text="Student List" Icon="@Icons.Material.Filled.People">
-
+            <MudTabPanel Text="Add Assignment" Icon="@Icons.Material.Filled.People" @ref="panel02">
+                <CreateEvaluationDialog onAdded="Activate_01" ModuleOfferingId="ModuleOfferingId"></CreateEvaluationDialog>
             </MudTabPanel>
+            
+            <MudTabPanel Text="Student List" Icon="@Icons.Material.Filled.People" @ref="panel03">
+            
+                        </MudTabPanel>
 
-            <MudTabPanel Text="Results" Icon="@Icons.Material.Filled.TableView">
+            <MudTabPanel Text="Results" Icon="@Icons.Material.Filled.TableView" @ref="panel04">
                 <MudCard Class="mb-5">
                     <MudCardContent Style="@($"color:{Colors.Grey.Darken4}; background:{Colors.Grey.Lighten3};")">
                         <div class="d-flex justify-space-around flex-grow-1 gap-1">
@@ -54,6 +52,13 @@ else
 
 
 @code {
+    MudTabs tabs;
+    MudTabPanel panel01;
+    MudTabPanel panel02;
+    MudTabPanel panel03;
+    MudTabPanel panel04;
+
+    
     [Parameter]
     public int ModuleOfferingId { get; set; }
 
@@ -77,17 +82,11 @@ else
         }
     }
     
-    private async Task OpenCreateEvaluationDialog()
+    void Activate_01()
     {
-        var dialog = DialogService.Show<CreateEvaluationDialog>("Create Evaluation");
-        var result = await dialog.Result;
-        if (!result.Cancelled)
-        {
-            var newEvaluation = (Evaluation)result.Data;
-            // Add logic to save the new evaluation to the ModuleOffering
-            Console.WriteLine($"New Evaluation Created: Type {newEvaluation.Type}, Final Marks {newEvaluation.FinalMarks}, Total Marks {newEvaluation.TotalMarks}");
-            // Refresh the UI or perform other actions as needed
-        }
+        tabs.ActivatePanel(panel01);
+        Snackbar.Add("Student Added", Severity.Success);
+       
     }
 
 }

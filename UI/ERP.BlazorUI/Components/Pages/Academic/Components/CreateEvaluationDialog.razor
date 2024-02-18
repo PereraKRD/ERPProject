@@ -1,32 +1,92 @@
 @using ERP.Domain.Core.Entity
+@using FluentValidation
+@using ERP.Application.AcademicApp.Modules
+@using ERP.Application.AcademicApp.Modules.Interfaces
 
-<MudDialog>
-    <DialogContent>
-        <EditForm Model="@_evaluation">
-            <MudTextField T="int" Label="Evaluation Type" @bind-Value="@_evaluation.Type" FullWidth />
-            <MudTextField T="double" Label="Final Marks" @bind-Value="@_evaluation.FinalMarks" FullWidth />
-            <MudTextField T="double" Label="Marks" @bind-Value="@_evaluation.Marks" FullWidth />
-            <MudTextField T="int" Label="Total Marks" @bind-Value="@_evaluation.TotalMarks" FullWidth />
-        </EditForm>
-    </DialogContent>
-    <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-                <MudButton Color="Color.Primary" OnClick="HandleValidSubmit">Submit</MudButton>
+@inject ICreateAnEvaluationToAModuleOfferingUseCase CreateAnEvaluationToAModuleOfferingUseCase
 
-    </DialogActions>
-</MudDialog>
+<MudCard>
+    <MudForm Model="@model" @ref="@form" Validation="@(evaluationValidator.ValidateValue)"
+             ValidationDelay="0">
+        <MudCardContent>
+            <MudTextField @bind-Value="model.Name"
+                          For="@(() => model.Name)"
+                          Immediate="true"
+                          Label="Name" />
+
+            <MudNumericField @bind-Value="model.Type"
+                             For="@(() => model.Type)"
+                             Immediate="true"
+                             Label="Type" />
+
+            <MudNumericField @bind-Value="model.FinalMarks"
+                             For="@(() => model.FinalMarks)"
+                             Immediate="true"
+                             Label="Final Marks" />
+
+            <MudNumericField @bind-Value="model.Marks"
+                             For="@(() => model.Marks)"
+                             Immediate="true"
+                             Label="Marks" />
+
+        </MudCardContent>
+    </MudForm>
+    <MudCardActions>
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Class="ml-auto"
+                   OnClick="@(async () => await Submit())">Add</MudButton>
+    </MudCardActions>
+</MudCard>
 
 @code {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter]
+    public int ModuleOfferingId { get; set; }
+    [Parameter]
+    public EventCallback onAdded { get; set; }
+    
+    private Evaluation model = new Evaluation();
 
-    private Evaluation _evaluation = new Evaluation();
+    EvaluationModelValidator evaluationValidator = new EvaluationModelValidator();
+    MudForm form;
 
-    private void HandleValidSubmit()
+    public class EvaluationModelValidator : AbstractValidator<Evaluation>
     {
-        // Logic to save the _evaluation
-        Console.WriteLine("Creating Evaluation...");
-        MudDialog.Close(DialogResult.Ok(_evaluation));
+        public EvaluationModelValidator()
+        {
+            RuleFor(x => x.Name)
+                .NotEmpty()
+                .Length(1, 100);
+
+            RuleFor(x => x.Type)
+                .InclusiveBetween(1,5);
+
+            RuleFor(x => x.FinalMarks)
+                .InclusiveBetween(0, 100); // Assuming marks are out of 100
+
+            RuleFor(x => x.Marks)
+                .InclusiveBetween(0, 100); // Same assumption as above
+        }
+
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<Evaluation>
+                                .CreateWithOptions((Evaluation)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
     }
     
-    void Cancel() => MudDialog.Cancel();
+    private async Task Submit()
+    {
+        await form.Validate();
+
+        if (form.IsValid)
+        {
+            await CreateAnEvaluationToAModuleOfferingUseCase.ExecuteAsync(model,ModuleOfferingId);
+            await onAdded.InvokeAsync();
+        }
+    }
+
 }
