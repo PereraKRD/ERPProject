@@ -1,0 +1,41 @@
+@using ERP.Domain.Core.Entity
+@using ERP.Application.AcademicApp.Modules.Interfaces
+@inject IEditEvaluationUseCase EditEvaluationUseCase
+@inject ISnackbar Snackbar
+
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.DeleteForever" Class="mr-3 mb-n1" />
+            Edit Evaluation
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField @bind-Value="@Evaluation.Name" Label="Name" />
+        <MudTextField @bind-Value="@Evaluation.Type" Label="Type" />
+        <MudTextField @bind-Value="@Evaluation.FinalMarks" Label="Final Marks" />
+        <MudTextField @bind-Value="@Evaluation.Marks" Label="Marks"  />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Error" OnClick="SaveEvaluation">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public Evaluation Evaluation { get; set; }
+
+    private async Task SaveEvaluation()
+    {
+        await EditEvaluationUseCase.ExecuteAsync(Evaluation);
+        Snackbar.Add("Evaluation Edited Successfully", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(true)); // Pass true to indicate a successful edit
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}

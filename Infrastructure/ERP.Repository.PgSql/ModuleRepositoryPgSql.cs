@@ -54,6 +54,38 @@ namespace ERP.Repository.PgSql
 			
 		}
 		
+		public async Task UpdateEvaluationAsync(Evaluation updatedEvaluation)
+		{
+			using var _context = _factory.CreateDbContext();
+			 var existingEvaluation =  _context.Evaluations.FirstOrDefault(e => e.EvaluationId == updatedEvaluation.EvaluationId);
+			if (existingEvaluation == null)
+			{
+				throw new ArgumentException("Evaluation not found.", nameof(updatedEvaluation.EvaluationId));
+			}
+
+			// Updating properties
+			existingEvaluation.Name = updatedEvaluation.Name;
+			existingEvaluation.Type = updatedEvaluation.Type;
+			existingEvaluation.FinalMarks = updatedEvaluation.FinalMarks;
+			existingEvaluation.Marks = updatedEvaluation.Marks;
+
+			// Save changes
+			await _context.SaveChangesAsync();
+		}
+		
+		public async Task DeleteEvaluationAsync(int evaluationId)
+		{
+			using var _context = _factory.CreateDbContext();
+			var evaluation =  _context.Evaluations.FirstOrDefault(e => e.EvaluationId == evaluationId);
+			if (evaluation == null)
+			{
+				throw new ArgumentException("Evaluation not found.", nameof(evaluationId));
+			}
+			_context.Evaluations.Remove(evaluation);
+			await _context.SaveChangesAsync();
+		}
+
+		
 		// public async Task AddOrUpdateMarksAsync(int evaluationId, IDictionary<int, double> studentMarks)
 		// {
 		// 	// Logic to add or update marks for the specified evaluation

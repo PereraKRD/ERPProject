@@ -1,5 +1,10 @@
 @using ERP.Domain.Core.Entity
 @using ERP.Application.AcademicApp.Modules
+@using ERP.Application.AcademicApp.Modules.Interfaces
+@inject IDialogService DialogService
+@inject IDeleteEvaluationUseCase DeleteEvaluationUseCase
+@inject IGetModuleOfferingByIdUseCase GetModuleOfferingByIdUseCase
+@inject ISnackbar Snackbar
 <h3>DisplayEvaluationList</h3>
 
 <MudTable Items="@_evaluations">
@@ -17,34 +22,55 @@
             <MudTd DataLabel="Total Marks Given">@context.Marks</MudTd>
             <MudTd>
                 <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@( () => EditEvaluation(context) )" />
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@( () => DeleteEvaluation(context) )" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@( () => DeleteEvaluation(context.EvaluationId) )" />
             </MudTd>
         </RowTemplate>
     </MudTable>
 
 @code {
     [Parameter]
-    public ModuleOffering ModuleOffering { get; set; }
+    public int ModuleOfferingId { get; set; }
 
+    public ModuleOffering ModuleOffering;
+    
     private List<Evaluation> _evaluations = new List<Evaluation>();
     
     protected override async Task OnInitializedAsync()
     {
-
+        ModuleOffering = await GetModuleOfferingByIdUseCase.ExecuteAsync(ModuleOfferingId);
          _evaluations = ModuleOffering.Evalutions.ToList();
     }
     
     
-    void EditEvaluation(Evaluation evaluation)
+    async Task EditEvaluation(Evaluation evaluation)
     {
-        // Show edit dialog or navigate to edit page
+        var parameters = new DialogParameters { ["evaluation"] = evaluation };
+        var dialog = DialogService.Show<EditEvaluationdialog>("Edit Evaluation", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled && result.Data is true)
+        {
+             await RefreshEvaluations();
+        }
+    }
+    
+     async Task RefreshEvaluations()
+    {
+        ModuleOffering = await GetModuleOfferingByIdUseCase.ExecuteAsync(ModuleOfferingId);
+        _evaluations = ModuleOffering.Evalutions.ToList();
+        StateHasChanged(); 
     }
 
-    async Task DeleteEvaluation(Evaluation evaluation)
+    async Task DeleteEvaluation(int evaluationId)
     {
-        // Confirm deletion with the user
-        // If confirmed, call the backend to delete the evaluation
-        // Reload or update the evaluations list to reflect the changes
+        var parameters = new DialogParameters { ["EvaluationId"] = evaluationId };
+        var dialog = DialogService.Show<ConfirmEvaluationDeleteDialog>("Confirm Delete", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled && result.Data is true)
+        {
+            await RefreshEvaluations();
+        }
     }
 
 
