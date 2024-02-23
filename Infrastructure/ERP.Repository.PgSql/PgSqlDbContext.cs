@@ -11,17 +11,16 @@ namespace ERP.Repository.PgSql
         {
 
         }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new StudentConfigurations());
             
             modelBuilder.Entity<ModuleOfferingTeacher>()
-            .HasKey(mt => new { mt.ModuleOfferingId, mt.TeacherId });
+                .HasKey(mt => new { mt.ModuleOfferingId, mt.TeacherId });
 
             modelBuilder.Entity<ModuleOfferingTeacher>()
                 .HasOne(mt => mt.ModuleOffering)
-                .WithMany(mo => mo.Teachers)
+                .WithMany(mt => mt.Teachers)
                 .HasForeignKey(mt => mt.ModuleOfferingId);
      
 
@@ -32,17 +31,17 @@ namespace ERP.Repository.PgSql
 
 
             modelBuilder.Entity<ModuleOfferingFirstExaminer>()
-                .HasKey(mf => new { mf.ModuleOfferingId, mf.TeacherId });
+                .HasKey(mf => new {mf.ModuleOfferingId,mf.TeacherId});
 
             modelBuilder.Entity<ModuleOfferingFirstExaminer>()
                 .HasOne(mf => mf.ModuleOffering)
-                .WithMany(mo => mo.FirstExaminers) 
-                .HasForeignKey(mf => mf.ModuleOfferingId); // Corrected to use ModuleOfferingId
+                .WithMany(mf => mf.FirstExaminers)
+                .HasForeignKey(mf => mf.TeacherId);
 
             modelBuilder.Entity<ModuleOfferingFirstExaminer>()
                 .HasOne(mf => mf.Teacher)
-                .WithMany(t => t.FirstExaminersModules) 
-                .HasForeignKey(mf => mf.TeacherId);
+                .WithMany(mf => mf.FirstExaminersModules)
+                .HasForeignKey(mf =>mf.TeacherId);
 
 
             modelBuilder.Entity<ModuleOfferingSecondExaminer>()
@@ -50,12 +49,12 @@ namespace ERP.Repository.PgSql
 
             modelBuilder.Entity<ModuleOfferingSecondExaminer>()
                 .HasOne(ms => ms.ModuleOffering)
-                .WithMany(mo => mo.SecondExaminers) 
-                .HasForeignKey(ms => ms.ModuleOfferingId); // Corrected to use ModuleOfferingId
+                .WithMany(ms => ms.SecondExaminers)
+                .HasForeignKey(ms => ms.TeacherId);
 
             modelBuilder.Entity<ModuleOfferingSecondExaminer>()
                 .HasOne(ms => ms.Teacher)
-                .WithMany(t => t.SecondExaminersModules) 
+                .WithMany(ms => ms.SecondExaminersModules)
                 .HasForeignKey(ms => ms.TeacherId);
 
         }

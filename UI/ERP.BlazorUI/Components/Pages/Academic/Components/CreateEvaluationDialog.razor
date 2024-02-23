@@ -46,6 +46,7 @@
     public EventCallback onAdded { get; set; }
     
     private Evaluation model = new Evaluation();
+    
 
     EvaluationModelValidator evaluationValidator = new EvaluationModelValidator();
     MudForm form;
@@ -84,6 +85,7 @@
 
         if (form.IsValid)
         {
+            model.ModuleOfferingID = ModuleOfferingId;
             await CreateAnEvaluationToAModuleOfferingUseCase.ExecuteAsync(model,ModuleOfferingId);
             await onAdded.InvokeAsync();
         }

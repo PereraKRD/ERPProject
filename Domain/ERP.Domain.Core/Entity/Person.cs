@@ -14,7 +14,6 @@ namespace ERP.Domain.Core.Entity
         public string District { get; set; } = string.Empty;
         public DateOnly DoB {  get; set; }
         public string  NationalID { get; set;} = string.Empty;
-        public string PhoneNumber { get; set; } = string.Empty;
 
 
     }

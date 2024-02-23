@@ -10,171 +10,210 @@ namespace ERP.Repository.PgSql.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "TotalMarks",
+            migrationBuilder.DropForeignKey(
+                name: "FK_Evaluation_ModuleOfferings_ModuleOfferingId",
                 table: "Evaluation");
 
-            migrationBuilder.AddColumn<string>(
-                name: "Name",
+            migrationBuilder.RenameColumn(
+                name: "ModuleOfferingId",
                 table: "Evaluation",
-                type: "text",
+                newName: "ModuleOfferingID");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_Evaluation_ModuleOfferingId",
+                table: "Evaluation",
+                newName: "IX_Evaluation_ModuleOfferingID");
+
+            migrationBuilder.AlterColumn<int>(
+                name: "ModuleOfferingID",
+                table: "Evaluation",
+                type: "integer",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: 0,
+                oldClrType: typeof(int),
+                oldType: "integer",
+                oldNullable: true);
 
             migrationBuilder.UpdateData(
                 table: "Students",
                 keyColumn: "StudentId",
                 keyValue: 1001,
                 columns: new[] { "Email", "FirstName", "LastName", "RegistrationNum" },
-                values: new object[] { "Clementine_Thiel@gmail.com", "Clementine", "Thiel", "EG/2021/4436" });
+                values: new object[] { "Iliana_Macejkovic@gmail.com", "Iliana", "Macejkovic", "EG/2020/7596" });
 
             migrationBuilder.UpdateData(
                 table: "Students",
                 keyColumn: "StudentId",
                 keyValue: 1002,
                 columns: new[] { "Email", "FirstName", "LastName", "RegistrationNum" },
-                values: new object[] { "Mose.Hoppe2@yahoo.com", "Mose", "Hoppe", "EG/2020/3600" });
+                values: new object[] { "Nolan93@hotmail.com", "Nolan", "Maggio", "EG/2023/3069" });
 
             migrationBuilder.UpdateData(
                 table: "Students",
                 keyColumn: "StudentId",
                 keyValue: 1003,
                 columns: new[] { "Email", "FirstName", "LastName", "RegistrationNum" },
-                values: new object[] { "Joyce23@hotmail.com", "Joyce", "Greenfelder", "EG/2020/6572" });
+                values: new object[] { "Jerald1@gmail.com", "Jerald", "Feil", "EG/2021/5327" });
 
             migrationBuilder.UpdateData(
                 table: "Students",
                 keyColumn: "StudentId",
                 keyValue: 1004,
                 columns: new[] { "Email", "FirstName", "LastName", "RegistrationNum" },
-                values: new object[] { "Augusta_Reinger@yahoo.com", "Augusta", "Reinger", "EG/2020/2218" });
+                values: new object[] { "Verda_Lesch29@hotmail.com", "Verda", "Lesch", "EG/2021/2408" });
 
             migrationBuilder.UpdateData(
                 table: "Students",
                 keyColumn: "StudentId",
                 keyValue: 1005,
                 columns: new[] { "Email", "FirstName", "LastName", "RegistrationNum" },
-                values: new object[] { "Dangelo_Schmitt1@yahoo.com", "D'angelo", "Schmitt", "EG/2020/8870" });
+                values: new object[] { "Mateo12@hotmail.com", "Mateo", "Frami", "EG/2023/7242" });
 
             migrationBuilder.UpdateData(
                 table: "Students",
                 keyColumn: "StudentId",
                 keyValue: 1006,
                 columns: new[] { "Email", "FirstName", "LastName", "RegistrationNum" },
-                values: new object[] { "Robb.Schimmel44@hotmail.com", "Robb", "Schimmel", "EG/2020/2049" });
+                values: new object[] { "Koby.Halvorson@yahoo.com", "Koby", "Halvorson", "EG/2020/6096" });
 
             migrationBuilder.UpdateData(
                 table: "Students",
                 keyColumn: "StudentId",
                 keyValue: 1007,
                 columns: new[] { "Email", "FirstName", "LastName", "RegistrationNum" },
-                values: new object[] { "Elyssa5@hotmail.com", "Elyssa", "Conroy", "EG/2021/9463" });
+                values: new object[] { "Audra28@yahoo.com", "Audra", "Kassulke", "EG/2021/5216" });
 
             migrationBuilder.UpdateData(
                 table: "Students",
                 keyColumn: "StudentId",
                 keyValue: 1008,
                 columns: new[] { "Email", "FirstName", "LastName", "RegistrationNum" },
-                values: new object[] { "Diego_Bechtelar69@hotmail.com", "Diego", "Bechtelar", "EG/2021/7800" });
+                values: new object[] { "Raina99@hotmail.com", "Raina", "Herzog", "EG/2021/7012" });
 
             migrationBuilder.UpdateData(
                 table: "Students",
                 keyColumn: "StudentId",
                 keyValue: 1009,
                 columns: new[] { "Email", "FirstName", "LastName", "RegistrationNum" },
-                values: new object[] { "Maximillia97@yahoo.com", "Maximillia", "Fahey", "EG/2023/1902" });
+                values: new object[] { "Joan.Stiedemann@yahoo.com", "Joan", "Stiedemann", "EG/2022/7161" });
 
             migrationBuilder.UpdateData(
                 table: "Students",
                 keyColumn: "StudentId",
                 keyValue: 1010,
                 columns: new[] { "Email", "FirstName", "LastName", "RegistrationNum" },
-                values: new object[] { "Mose_Gerhold@hotmail.com", "Mose", "Gerhold", "EG/2023/4232" });
+                values: new object[] { "Margie.Jenkins27@hotmail.com", "Margie", "Jenkins", "EG/2020/1767" });
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Evaluation_ModuleOfferings_ModuleOfferingID",
+                table: "Evaluation",
+                column: "ModuleOfferingID",
+                principalTable: "ModuleOfferings",
+                principalColumn: "ModuleOfferingId",
+                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Name",
+            migrationBuilder.DropForeignKey(
+                name: "FK_Evaluation_ModuleOfferings_ModuleOfferingID",
                 table: "Evaluation");
 
-            migrationBuilder.AddColumn<int>(
-                name: "TotalMarks",
+            migrationBuilder.RenameColumn(
+                name: "ModuleOfferingID",
+                table: "Evaluation",
+                newName: "ModuleOfferingId");
+
+            migrationBuilder.RenameIndex(
+                name: "IX_Evaluation_ModuleOfferingID",
+                table: "Evaluation",
+                newName: "IX_Evaluation_ModuleOfferingId");
+
+            migrationBuilder.AlterColumn<int>(
+                name: "ModuleOfferingId",
                 table: "Evaluation",
                 type: "integer",
-                nullable: false,
-                defaultValue: 0);
+                nullable: true,
+                oldClrType: typeof(int),
+                oldType: "integer");
 
             migrationBuilder.UpdateData(
                 table: "Students",
                 keyColumn: "StudentId",
                 keyValue: 1001,
                 columns: new[] { "Email", "FirstName", "LastName", "RegistrationNum" },
-                values: new object[] { "Elyssa9@hotmail.com", "Elyssa", "Halvorson", "EG/2023/2984" });
+                values: new object[] { "Abby_Pagac27@gmail.com", "Abby", "Pagac", "EG/2022/7318" });
 
             migrationBuilder.UpdateData(
                 table: "Students",
                 keyColumn: "StudentId",
                 keyValue: 1002,
                 columns: new[] { "Email", "FirstName", "LastName", "RegistrationNum" },
-                values: new object[] { "Elinor.Wilkinson@hotmail.com", "Elinor", "Wilkinson", "EG/2022/1732" });
+                values: new object[] { "Delilah37@gmail.com", "Delilah", "Stehr", "EG/2023/4197" });
 
             migrationBuilder.UpdateData(
                 table: "Students",
                 keyColumn: "StudentId",
                 keyValue: 1003,
                 columns: new[] { "Email", "FirstName", "LastName", "RegistrationNum" },
-                values: new object[] { "Bertram82@hotmail.com", "Bertram", "Anderson", "EG/2023/7691" });
+                values: new object[] { "Clarabelle31@yahoo.com", "Clarabelle", "Bode", "EG/2020/4940" });
 
             migrationBuilder.UpdateData(
                 table: "Students",
                 keyColumn: "StudentId",
                 keyValue: 1004,
                 columns: new[] { "Email", "FirstName", "LastName", "RegistrationNum" },
-                values: new object[] { "Everett_Lehner@yahoo.com", "Everett", "Lehner", "EG/2022/5139" });
+                values: new object[] { "Morton69@yahoo.com", "Morton", "Parker", "EG/2022/1532" });
 
             migrationBuilder.UpdateData(
                 table: "Students",
                 keyColumn: "StudentId",
                 keyValue: 1005,
                 columns: new[] { "Email", "FirstName", "LastName", "RegistrationNum" },
-                values: new object[] { "Tessie.Olson88@yahoo.com", "Tessie", "Olson", "EG/2020/6887" });
+                values: new object[] { "Moshe.Konopelski@hotmail.com", "Moshe", "Konopelski", "EG/2020/9926" });
 
             migrationBuilder.UpdateData(
                 table: "Students",
                 keyColumn: "StudentId",
                 keyValue: 1006,
                 columns: new[] { "Email", "FirstName", "LastName", "RegistrationNum" },
-                values: new object[] { "Monroe74@yahoo.com", "Monroe", "Shields", "EG/2021/3856" });
+                values: new object[] { "Tremayne.Ortiz57@gmail.com", "Tremayne", "Ortiz", "EG/2022/9674" });
 
             migrationBuilder.UpdateData(
                 table: "Students",
                 keyColumn: "StudentId",
                 keyValue: 1007,
                 columns: new[] { "Email", "FirstName", "LastName", "RegistrationNum" },
-                values: new object[] { "Lavern9@gmail.com", "Lavern", "Robel", "EG/2022/3629" });
+                values: new object[] { "Brendon72@gmail.com", "Brendon", "VonRueden", "EG/2023/9653" });
 
             migrationBuilder.UpdateData(
                 table: "Students",
                 keyColumn: "StudentId",
                 keyValue: 1008,
                 columns: new[] { "Email", "FirstName", "LastName", "RegistrationNum" },
-                values: new object[] { "Brielle75@gmail.com", "Brielle", "Waelchi", "EG/2023/6304" });
+                values: new object[] { "Alfred.Lemke@hotmail.com", "Alfred", "Lemke", "EG/2021/8408" });
 
             migrationBuilder.UpdateData(
                 table: "Students",
                 keyColumn: "StudentId",
                 keyValue: 1009,
                 columns: new[] { "Email", "FirstName", "LastName", "RegistrationNum" },
-                values: new object[] { "Elouise59@hotmail.com", "Elouise", "Herzog", "EG/2022/5300" });
+                values: new object[] { "Camren39@gmail.com", "Camren", "Lebsack", "EG/2020/9535" });
 
             migrationBuilder.UpdateData(
                 table: "Students",
                 keyColumn: "StudentId",
                 keyValue: 1010,
                 columns: new[] { "Email", "FirstName", "LastName", "RegistrationNum" },
-                values: new object[] { "Alexander13@hotmail.com", "Alexander", "Bode", "EG/2021/3749" });
+                values: new object[] { "Alexandro.Zieme49@gmail.com", "Alexandro", "Zieme", "EG/2020/7208" });
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Evaluation_ModuleOfferings_ModuleOfferingId",
+                table: "Evaluation",
+                column: "ModuleOfferingId",
+                principalTable: "ModuleOfferings",
+                principalColumn: "ModuleOfferingId");
         }
     }
 }
