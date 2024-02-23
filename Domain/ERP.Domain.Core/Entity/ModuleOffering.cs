@@ -17,10 +17,14 @@ namespace ERP.Domain.Core.Entity
 
         public Semester Semester { get; set; }
 
-        public ICollection<ModuleOfferingTeacher> Teachers { get; set; }
-        public ICollection<ModuleOfferingFirstExaminer> FirstExaminers { get; set; }
-        public ICollection<ModuleOfferingSecondExaminer> SecondExaminers { get; set; }
-        public ICollection<ModuleRegistration> Registrations { get; set; }
-        public ICollection<Evaluation> Evalutions { get; set; }
+        public ICollection<ModuleOfferingTeacher> Teachers { get; set; } = new List<ModuleOfferingTeacher>();
+
+        public ICollection<ModuleOfferingFirstExaminer> FirstExaminers { get; set; } =
+            new List<ModuleOfferingFirstExaminer>();
+
+        public ICollection<ModuleOfferingSecondExaminer> SecondExaminers { get; set; } =
+            new List<ModuleOfferingSecondExaminer>();
+        public ICollection<ModuleRegistration> Registrations { get; set; } = new List<ModuleRegistration>();
+        public ICollection<Evaluation> Evalutions { get; set; } = new List<Evaluation>();
     }
 }

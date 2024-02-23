@@ -13,8 +13,8 @@ public class CreateAnEvaluationToAModuleOfferingUseCase : ICreateAnEvaluationToA
         this._moduleRepository = moduleRepository;
     }
     
-    public async Task ExecuteAsync(Evaluation evaluation, int moduleOfferingId)
+    public  Task ExecuteAsync(Evaluation evaluation, int moduleOfferingId)
     { 
-        await _moduleRepository.CreateEvaluationAsync(evaluation, moduleOfferingId);
+        return _moduleRepository.CreateEvaluationAsync(evaluation, moduleOfferingId);
     }
 }

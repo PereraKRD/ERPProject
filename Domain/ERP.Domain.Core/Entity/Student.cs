@@ -17,6 +17,8 @@
         public string NationalID { get; set; } = string.Empty;
 
         public Degree? Degree { get; set; }
+        public ICollection<StudentResult> StudentResults { get; set; } = new List<StudentResult>();
+
         //public ICollection<Semester> Semesters { get; set; }
     }
 }

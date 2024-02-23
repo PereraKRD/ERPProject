@@ -56,7 +56,30 @@ namespace ERP.Repository.PgSql
                 .HasOne(ms => ms.Teacher)
                 .WithMany(ms => ms.SecondExaminersModules)
                 .HasForeignKey(ms => ms.TeacherId);
+            
+            //defining PK for StudentResult
+            modelBuilder.Entity<StudentResult>().HasKey(sr => new { sr.StudentId, sr.EvaluationId });
+            
+            //defining PK for Evaluation
+            modelBuilder.Entity<Evaluation>().HasKey(e => new { e.EvaluationId });
+            
+            // Student and StudentResult (One-to-Many)
+            modelBuilder.Entity<Student>()
+                .HasMany(s => s.StudentResults)
+                .WithOne(sr => sr.Student)
+                .HasForeignKey(sr => sr.StudentId);
 
+            // Evaluation and StudentResult (One-to-Many)
+            modelBuilder.Entity<Evaluation>()
+                .HasMany(e => e.Results) 
+                .WithOne(sr => sr.Evaluation)
+                .HasForeignKey(sr => sr.EvaluationId);
+            
+            // ModuleOffering and Evaluation (One-to-Many)
+            modelBuilder.Entity<ModuleOffering>()
+                .HasMany(e => e.Evalutions)
+                .WithOne(mo => mo.ModuleOffering)
+                .HasForeignKey(mo => mo.ModuleOfferingID); 
         }
 
         public DbSet<Student> Students { get; set; }
