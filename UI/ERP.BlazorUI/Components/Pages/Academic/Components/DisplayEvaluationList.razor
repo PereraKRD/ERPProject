@@ -1,0 +1,51 @@
+@using ERP.Domain.Core.Entity
+@using ERP.Application.AcademicApp.Modules
+<h3>DisplayEvaluationList</h3>
+
+<MudTable Items="@_evaluations">
+        <HeaderContent>
+            <MudTh>Name</MudTh>
+            <MudTh>Type</MudTh>
+            <MudTh>Out of Final Marks</MudTh>
+            <MudTh>Total Marks Given</MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Type">@context.Type</MudTd>
+            <MudTd DataLabel="Out of Final Marks">@context.FinalMarks</MudTd>
+            <MudTd DataLabel="Total Marks Given">@context.Marks</MudTd>
+            <MudTd>
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@( () => EditEvaluation(context) )" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@( () => DeleteEvaluation(context) )" />
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+
+@code {
+    [Parameter]
+    public ModuleOffering ModuleOffering { get; set; }
+
+    private List<Evaluation> _evaluations = new List<Evaluation>();
+    
+    protected override async Task OnInitializedAsync()
+    {
+
+         _evaluations = ModuleOffering.Evalutions.ToList();
+    }
+    
+    
+    void EditEvaluation(Evaluation evaluation)
+    {
+        // Show edit dialog or navigate to edit page
+    }
+
+    async Task DeleteEvaluation(Evaluation evaluation)
+    {
+        // Confirm deletion with the user
+        // If confirmed, call the backend to delete the evaluation
+        // Reload or update the evaluations list to reflect the changes
+    }
+
+
+}

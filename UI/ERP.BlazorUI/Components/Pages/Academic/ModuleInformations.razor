@@ -14,13 +14,7 @@
     <MudPaper>
         <MudTabs Outlined="true" @ref="tabs">
             <MudTabPanel Text="Assignments" Icon="@Icons.Material.Filled.Assignment" @ref="panel01">
-                <MudCard Class="mb-5">
-                    <MudCardContent Style="@($"color:{Colors.Grey.Darken4}; background:{Colors.Grey.Lighten3};")">
-                        <MudListItem Text="Assignment 1" Value="2" />
-                        <MudListItem Text="Assignment 2" Value="3" />
-                        <MudListItem Text="Assignment 3" Value="4" />
-                    </MudCardContent>
-                </MudCard>
+                <DisplayEvaluationList ModuleOffering="_moduleOffering"></DisplayEvaluationList>
             </MudTabPanel>
 
             <MudTabPanel Text="Add Assignment" Icon="@Icons.Material.Filled.People" @ref="panel02">
@@ -77,16 +71,23 @@ else
         }
         catch (Exception ex)
         {
-            // Handle the exception appropriately, such as logging or displaying an error message.
+            // Handle the exception
             Console.WriteLine($"An error occurred while loading module offering: {ex.Message}");
         }
     }
     
-    void Activate_01()
+    private async Task RefreshEvaluationsAsync()
     {
+        await LoadModuleOfferingInfoAsync();
+        StateHasChanged();
+    }
+    
+    private async Task Activate_01()
+    {
+        
+        await RefreshEvaluationsAsync();
         tabs.ActivatePanel(panel01);
         Snackbar.Add("Evaluation Added Successfully", Severity.Success);
-       
     }
 
 }

@@ -31,6 +31,7 @@ namespace ERP.Repository.PgSql
 				       .Include(m => m.Module)
 				       .Include(m => m.Semester)
 				       .Include(m => m.Coordinator)
+				       .Include(m => m.Evalutions)
 				       .FirstOrDefaultAsync(m => m.ModuleOfferingId == moduleOfferingId)
 			       ?? throw new Exception($"Module offering with ID {moduleOfferingId} not found.");
 		}
