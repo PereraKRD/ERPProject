@@ -84,6 +84,18 @@ namespace ERP.Repository.PgSql
 			_context.Evaluations.Remove(evaluation);
 			await _context.SaveChangesAsync();
 		}
+		
+		public async Task<List<Student>> GetStudentsByModuleOfferingIdAsync(int moduleOfferingId)
+		{
+			using var _context = _factory.CreateDbContext();
+			var students = await _context.ModuleRegistrations
+				.Where(mr => mr.ModuleOfferingId == moduleOfferingId)
+				.Select(mr => mr.Student)
+				.Distinct()
+				.ToListAsync();
+
+			return students;
+		}
 
 		
 		// public async Task AddOrUpdateMarksAsync(int evaluationId, IDictionary<int, double> studentMarks)

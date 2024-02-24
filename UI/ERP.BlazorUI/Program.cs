@@ -43,6 +43,7 @@ builder.Services.AddScoped<IGetModuleOfferingByIdUseCase, GetModuleOfferingByIdU
 builder.Services.AddScoped<ICreateAnEvaluationToAModuleOfferingUseCase, CreateAnEvaluationToAModuleOfferingUseCase>();
 builder.Services.AddScoped<IEditEvaluationUseCase, EditEvaluationUseCase>();
 builder.Services.AddScoped<IDeleteEvaluationUseCase, DeleteEvaluationUseCase>();
+builder.Services.AddScoped<IGetStudentListByModuleOfferingUseCase, GetStudentListByModuleOfferingUseCase>();
 
 
 var app = builder.Build();

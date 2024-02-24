@@ -18,6 +18,7 @@
 
         public Degree? Degree { get; set; }
         public ICollection<StudentResult> StudentResults { get; set; } = new List<StudentResult>();
+        public ICollection<ModuleRegistration> ModuleRegistrations { get; set; } = new List<ModuleRegistration>();
 
         //public ICollection<Semester> Semesters { get; set; }
     }

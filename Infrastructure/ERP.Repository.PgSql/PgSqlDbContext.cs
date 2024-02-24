@@ -57,10 +57,10 @@ namespace ERP.Repository.PgSql
                 .WithMany(ms => ms.SecondExaminersModules)
                 .HasForeignKey(ms => ms.TeacherId);
             
-            //defining PK for StudentResult
+            //PK for StudentResult
             modelBuilder.Entity<StudentResult>().HasKey(sr => new { sr.StudentId, sr.EvaluationId });
             
-            //defining PK for Evaluation
+            //PK for Evaluation
             modelBuilder.Entity<Evaluation>().HasKey(e => new { e.EvaluationId });
             
             // Student and StudentResult (One-to-Many)
@@ -80,6 +80,18 @@ namespace ERP.Repository.PgSql
                 .HasMany(e => e.Evalutions)
                 .WithOne(mo => mo.ModuleOffering)
                 .HasForeignKey(mo => mo.ModuleOfferingID); 
+            
+            // Student and ModuleRegistration (One-to-Many)
+            modelBuilder.Entity<Student>()
+                .HasMany(s => s.ModuleRegistrations)
+                .WithOne(mr => mr.Student)
+                .HasForeignKey(mr => mr.StudentId);
+
+            // ModuleOffering and ModuleRegistration (One-to-Many)
+            modelBuilder.Entity<ModuleOffering>()
+                .HasMany(mo => mo.Registrations)
+                .WithOne(mr => mr.ModuleOffering)
+                .HasForeignKey(mr => mr.ModuleOfferingId);
         }
 
         public DbSet<Student> Students { get; set; }
@@ -91,6 +103,8 @@ namespace ERP.Repository.PgSql
         public DbSet<ModuleOfferingSecondExaminer> ModuleSecondExaminers { get; set; }
         public DbSet<Evaluation> Evaluations { get; set; }
         public DbSet<StudentResult> StudentResults { get; set; }
+        
+        public DbSet<ModuleRegistration> ModuleRegistrations { get; set; }
 
     }
 }

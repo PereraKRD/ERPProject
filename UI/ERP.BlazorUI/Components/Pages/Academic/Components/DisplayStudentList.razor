@@ -1,8 +1,32 @@
+@using ERP.Domain.Core.Entity
+@using ERP.Application.AcademicApp.Modules.Interfaces
+@inject IGetStudentListByModuleOfferingUseCase GetStudentListByModuleOfferingUseCase
 <h3>DisplayStudentList</h3>
 
 <p>Relevant ModuleOfferingId is : @ModuleOfferingId</p>
 
+@if (students != null && students.Any())
+{
+    <ul>
+    @foreach (var student in students)
+    {
+        <li>@student.FirstName @student.LastName</li>
+    }
+    </ul>
+}
+else
+{
+    <p>No students are enrolled in this module offering.</p>
+}
+
 @code {
     [Parameter] 
     public int ModuleOfferingId { get; set; }
+    
+    private List<Student> students = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        students = await GetStudentListByModuleOfferingUseCase.ExecuteAsync(ModuleOfferingId);
+    }
 }
