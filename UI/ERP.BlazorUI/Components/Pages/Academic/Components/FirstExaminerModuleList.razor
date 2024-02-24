@@ -1,0 +1,52 @@
+﻿@using ERP.Domain.Core.Entity
+@using ERP.Application.AcademicApp.Modules.Interfaces
+@using Microsoft.AspNetCore.Components.Authorization
+@inject IViewFirstExaminerModuleByNameUseCase ViewFirstExaminerModuleByNameUseCase
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+<h3>First Examiner Modules</h3>
+
+<MudExpansionPanels MultiExpansion="true">
+	@foreach (var semester in Enumerable.Range(1, 8))
+	{
+		<MudExpansionPanel Text=@($"Semester {semester:D2}") MaxHeight="1000">
+			<div class="mt-4">
+				@foreach (var moduleFirstExaminer in _moduleFirstExaminer)
+				{
+					if (moduleFirstExaminer.ModuleOffering.Module.Semester == $"semester {semester:00}")
+					{
+						<div>
+							<button @onclick="() => ViewModuleInformation(moduleFirstExaminer.ModuleOfferingId)">
+								@moduleFirstExaminer.ModuleOffering.Module.Name
+							</button>
+						</div>
+					}
+				}
+			</div>
+		</MudExpansionPanel>
+	}
+</MudExpansionPanels>
+
+
+
+@code {
+	private List<ModuleOfferingFirstExaminer> _moduleFirstExaminer = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		await LoadModulesAsync();
+	}
+
+	private async Task LoadModulesAsync()
+	{
+		var teacherId = 1;
+		_moduleFirstExaminer = (await ViewFirstExaminerModuleByNameUseCase.ExecuteAsync(teacherId)).ToList();
+	}
+
+	private void ViewModuleInformation(int moduleOfferingId)
+	{
+		NavigationManager.NavigateTo($"/ModuleManagementTabs/{moduleOfferingId}");
+	}
+
+}

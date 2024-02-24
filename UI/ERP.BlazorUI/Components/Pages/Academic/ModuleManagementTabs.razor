@@ -1,15 +1,16 @@
 @page "/ModuleManagementTabs"
+@using ERP.BlazorUI.Components.Pages.Academic.Components
 
 <MudTabs Outlined="true" Position="@Position" Rounded="true" Border="true"
     ApplyEffectsToContainer="true" Class="mt-8" PanelClass="pa-6">
     <MudTabPanel Text="Coordinating Modules">
         <ModuleListPage></ModuleListPage>
     </MudTabPanel>
-    <MudTabPanel Text="FirstExaminer Modules">
-        <MudText>FirstExaminer Modules</MudText>
+    <MudTabPanel Text="First Examiner Modules">
+        <FirstExaminerModuleList></FirstExaminerModuleList>
     </MudTabPanel>
-    <MudTabPanel Text="SecondExaminer Modules">
-        <MudText>SecondExaminer Modules</MudText>
+    <MudTabPanel Text="Second Examiner Modules">
+        <SecondExaminerModuleList></SecondExaminerModuleList>
     </MudTabPanel>
 </MudTabs>
 
