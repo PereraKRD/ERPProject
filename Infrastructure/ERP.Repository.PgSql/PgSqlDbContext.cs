@@ -36,7 +36,7 @@ namespace ERP.Repository.PgSql
             modelBuilder.Entity<ModuleOfferingFirstExaminer>()
                 .HasOne(mf => mf.ModuleOffering)
                 .WithMany(mf => mf.FirstExaminers)
-                .HasForeignKey(mf => mf.TeacherId);
+                .HasForeignKey(mf => mf.ModuleOfferingId);
 
             modelBuilder.Entity<ModuleOfferingFirstExaminer>()
                 .HasOne(mf => mf.Teacher)
@@ -50,7 +50,7 @@ namespace ERP.Repository.PgSql
             modelBuilder.Entity<ModuleOfferingSecondExaminer>()
                 .HasOne(ms => ms.ModuleOffering)
                 .WithMany(ms => ms.SecondExaminers)
-                .HasForeignKey(ms => ms.TeacherId);
+                .HasForeignKey(ms => ms.ModuleOfferingId);
 
             modelBuilder.Entity<ModuleOfferingSecondExaminer>()
                 .HasOne(ms => ms.Teacher)
