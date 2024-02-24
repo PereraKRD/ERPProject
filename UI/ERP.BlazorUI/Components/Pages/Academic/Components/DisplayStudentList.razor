@@ -7,12 +7,25 @@
 
 @if (_students != null && _students.Any())
 {
-    <ul>
-    @foreach (var student in _students)
-    {
-        <li>@student.FirstName @student.LastName</li>
-    }
-    </ul>
+    <MudTable Items="@_students">
+        <HeaderContent>
+            <MudTh>Reg Number</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Email</MudTh>
+            <MudTh>Action</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nr">@context.RegistrationNum</MudTd>
+            <MudTd DataLabel="Sign">@context.FirstName @context.LastName </MudTd>
+            <MudTd DataLabel="Email">@context.Email</MudTd>
+            <MudTd>
+                            <MudIconButton Icon="@Icons.Material.Filled.Menu" />
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
 }
 else
 {
