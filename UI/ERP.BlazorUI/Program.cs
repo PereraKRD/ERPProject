@@ -40,6 +40,7 @@ builder.Services.AddScoped<IViewStudentById, ViewStudentById>();
 builder.Services.AddScoped<IEditStudentUseCase, EditStudentUseCase>();
 builder.Services.AddScoped<IViewTeacherModuleByNameUseCase, ViewTeacherModuleByNameUseCase>();
 builder.Services.AddScoped<IViewFirstExaminerModuleByNameUseCase, ViewFirstExaminerModuleByNameUseCase>();
+builder.Services.AddScoped<IViewSecondExaminerModuleByNameUseCase, ViewSecondExaminerModuleByNameUseCase>();
 builder.Services.AddScoped<IGetModuleOfferingByIdUseCase, GetModuleOfferingByIdUseCase>();
 builder.Services.AddScoped<ICreateAnEvaluationToAModuleOfferingUseCase, CreateAnEvaluationToAModuleOfferingUseCase>();
 builder.Services.AddScoped<IEditEvaluationUseCase, EditEvaluationUseCase>();

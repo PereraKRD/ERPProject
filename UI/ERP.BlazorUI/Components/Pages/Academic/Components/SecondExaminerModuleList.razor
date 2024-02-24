@@ -1,0 +1,48 @@
+﻿@using ERP.Application.AcademicApp.Modules.Interfaces
+@using ERP.Domain.Core.Entity
+@inject IViewSecondExaminerModuleByNameUseCase ViewSecondExaminerModulesByNameUseCase
+@inject NavigationManager NavigationManager
+
+<h3>Second Examiner Modules</h3>
+
+<MudExpansionPanels MultiExpansion="true">
+	@foreach (var semester in Enumerable.Range(1, 8))
+	{
+		<MudExpansionPanel Text=@($"Semester {semester:D2}") MaxHeight="1000">
+			<div class="mt-4">
+				@foreach (var moduleSecondExaminer in _moduleSecondExaminer)
+				{
+					if(moduleSecondExaminer.ModuleOffering.Module.Semester == $"semester {semester:00}")
+					{
+						<div>
+							<button @onclick="() => ViewModuleInformation(moduleSecondExaminer.ModuleOfferingId)">
+								@moduleSecondExaminer.ModuleOffering.Module.Name
+							</button>
+						</div>
+					}
+				}
+			</div>
+		</MudExpansionPanel>
+	}
+
+</MudExpansionPanels>
+
+@code {
+	private List<ModuleOfferingSecondExaminer> _moduleSecondExaminer = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		await LoadModulesAsync();
+	}
+
+	private async Task LoadModulesAsync()
+	{
+		var teacherId = 1;
+		_moduleSecondExaminer = (await ViewSecondExaminerModulesByNameUseCase.ExecuteAsync(teacherId)).ToList();
+	}
+
+	private void ViewModuleInformation(int moduleOfferingId)
+	{
+		NavigationManager.NavigateTo($"/ModuleManagementTabs/{moduleOfferingId}");
+	}
+}

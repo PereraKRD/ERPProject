@@ -36,7 +36,19 @@ namespace ERP.Repository.PgSql
 			return query;
 		}
 
-		public async Task<ModuleOffering> GetModuleOfferingAsync(int moduleOfferingId)
+        public async Task<IQueryable<ModuleOfferingSecondExaminer>> GetSecondExaminerModulesAsync(int teacherId)
+        {
+            var _context = _factory.CreateDbContext();
+            var query = _context.ModuleSecondExaminers
+                .Include(mfe => mfe.ModuleOffering)
+                .ThenInclude(mo => mo.Module)
+                .Include(mfe => mfe.Teacher)
+                .Where(mfe => mfe.TeacherId == teacherId);
+
+            return query;
+        }
+
+        public async Task<ModuleOffering> GetModuleOfferingAsync(int moduleOfferingId)
 		{
 			var _context = _factory.CreateDbContext();
 			return await _context.ModuleOfferings
