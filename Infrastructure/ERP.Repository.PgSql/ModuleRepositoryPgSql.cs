@@ -120,8 +120,14 @@ namespace ERP.Repository.PgSql
 
 			return students;
 		}
-
 		
+		public async Task<Evaluation> GetEvaluationByIdAsync(int evaluationId)
+		{
+			using var _context = _factory.CreateDbContext();
+			return await _context.Evaluations
+				.FirstOrDefaultAsync(e => e.EvaluationId == evaluationId)
+				?? throw new Exception($"Evaluation with ID {evaluationId} not found.");
+		}
 		// public async Task AddOrUpdateMarksAsync(int evaluationId, IDictionary<int, double> studentMarks)
 		// {
 		// 	// Logic to add or update marks for the specified evaluation

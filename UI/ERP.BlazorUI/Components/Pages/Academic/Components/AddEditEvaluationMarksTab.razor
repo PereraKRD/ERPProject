@@ -1,0 +1,33 @@
+@using ERP.Domain.Core.Entity
+@using ERP.Application.AcademicApp.Modules.Interfaces
+@inject IGetEvaluationByIdUseCase GetEvaluationByIdUseCase
+<h3>AddEditEvaluationMarks</h3>
+<MudTable Items="@_studentResults">
+            <HeaderContent>
+                <MudTh>Student Name</MudTh>
+                <MudTh>Marks Obtained</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Student Name">@($"{context.Student.FirstName} {context.Student.LastName}")</MudTd>
+                <MudTd DataLabel="Marks Obtained">
+                    <MudNumericField T="double" @bind-Value="context.StudentScore" Min="0" Max="@_evaluation.FinalMarks"/>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary">Save</MudButton>
+
+@code {
+    [Parameter] 
+    public int ModuleOfferingId { get; set; }
+    
+    [Parameter]
+    public int EvaluationId { get; set; }
+    
+    private Evaluation _evaluation;
+    private List<StudentResult> _studentResults = new();
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _evaluation = await GetEvaluationByIdUseCase.ExecuteAsync(EvaluationId);
+    }
+}

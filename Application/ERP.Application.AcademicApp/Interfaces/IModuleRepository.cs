@@ -11,6 +11,7 @@ public interface IModuleRepository
     Task CreateEvaluationAsync(Evaluation evaluation, int moduleOfferingId);
     Task UpdateEvaluationAsync(Evaluation evaluation);
     Task DeleteEvaluationAsync(int evaluationId);
+    Task <Evaluation> GetEvaluationByIdAsync(int evaluationId);
 
     Task<List<Student>> GetStudentsByModuleOfferingIdAsync(int moduleOfferingId);
 }
