@@ -46,6 +46,7 @@ builder.Services.AddScoped<ICreateAnEvaluationToAModuleOfferingUseCase, CreateAn
 builder.Services.AddScoped<IEditEvaluationUseCase, EditEvaluationUseCase>();
 builder.Services.AddScoped<IDeleteEvaluationUseCase, DeleteEvaluationUseCase>();
 builder.Services.AddScoped<IGetStudentListByModuleOfferingUseCase, GetStudentListByModuleOfferingUseCase>();
+builder.Services.AddScoped<IGetEvaluationByIdUseCase, GetEvaluationByIdUseCase>();
 
 
 var app = builder.Build();

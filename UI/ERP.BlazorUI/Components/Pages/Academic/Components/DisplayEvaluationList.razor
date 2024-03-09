@@ -5,6 +5,8 @@
 @inject IDeleteEvaluationUseCase DeleteEvaluationUseCase
 @inject IGetModuleOfferingByIdUseCase GetModuleOfferingByIdUseCase
 @inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
+
 <h3>DisplayEvaluationList</h3>
 
 <MudTable Items="@_evaluations">
@@ -16,7 +18,9 @@
             <MudTh>Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Name">
+                <MudButton OnClick="@(() => ViewEvaluationInformation(ModuleOfferingId, @context.EvaluationId))"> @context.Name</MudButton>
+            </MudTd>
             <MudTd DataLabel="Type">@context.Type</MudTd>
             <MudTd DataLabel="Out of Final Marks">@context.FinalMarks</MudTd>
             <MudTd DataLabel="Total Marks Given">@context.Marks</MudTd>
@@ -71,6 +75,11 @@
         {
             await RefreshEvaluations();
         }
+    }
+    
+    private void ViewEvaluationInformation(int moduleOfferingId,int evaluationId)
+    {
+        NavigationManager.NavigateTo($"/ModuleManagementTabs/{moduleOfferingId}/{evaluationId}");
     }
 
 
