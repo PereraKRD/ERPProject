@@ -1,0 +1,25 @@
+@page "/ModuleManagementTabs/{ModuleOfferingId:int}/{EvaluationId:int}"
+@using ERP.Domain.Core.Entity
+@using ERP.BlazorUI.Components.Pages.Academic.Components
+
+<h3>EvaluationManagementPage</h3>
+
+<MudPaper>
+    <MudTabs Outlined="true" >
+        <MudTabPanel Text="Evaluation Information">
+        </MudTabPanel>
+        <MudTabPanel Text="Add/Edit Marks">
+            <AddEditEvaluationMarksTab ModuleOfferingId = "ModuleOfferingId" EvaluationId = "EvaluationId"></AddEditEvaluationMarksTab>
+        </MudTabPanel>
+        <MudTabPanel Text="View Marks and Final Marks">
+        </MudTabPanel>
+    </MudTabs>
+</MudPaper>
+@code {
+    [Parameter] 
+    public int ModuleOfferingId { get; set; }
+
+    [Parameter] 
+    public int EvaluationId { get; set; }
+
+}
