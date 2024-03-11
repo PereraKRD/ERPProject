@@ -14,4 +14,6 @@ public interface IModuleRepository
     Task <Evaluation> GetEvaluationByIdAsync(int evaluationId);
 
     Task<List<Student>> GetStudentsByModuleOfferingIdAsync(int moduleOfferingId);
+	Task<List<StudentResult>> GetResultListByEvaluationIdAsync(int evaluationId);
+
 }
