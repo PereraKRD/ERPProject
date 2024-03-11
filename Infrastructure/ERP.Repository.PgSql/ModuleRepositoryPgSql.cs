@@ -128,6 +128,26 @@ namespace ERP.Repository.PgSql
 				.FirstOrDefaultAsync(e => e.EvaluationId == evaluationId)
 				?? throw new Exception($"Evaluation with ID {evaluationId} not found.");
 		}
+
+		public async Task<List<StudentResult>> GetResultListByEvaluationIdAsync(int evaluationId)
+		{
+			using var _context = _factory.CreateDbContext();
+			var studentResults = await _context.StudentResults
+				.Where(sr => sr.EvaluationId == evaluationId)
+				.Include(sr => sr.Student)
+				.Select(sr => new StudentResult
+				{
+					StudentResultId = sr.StudentResultId,
+					Student = sr.Student,
+					StudentScore = sr.StudentScore,
+					EvaluationId = sr.EvaluationId,
+				})
+				.Distinct()
+				.ToListAsync();
+
+			return studentResults;
+		}
+
 		// public async Task AddOrUpdateMarksAsync(int evaluationId, IDictionary<int, double> studentMarks)
 		// {
 		// 	// Logic to add or update marks for the specified evaluation
