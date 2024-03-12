@@ -1,0 +1,42 @@
+﻿@page "/Dashboard"
+
+<PageTitle>Dashboard</PageTitle>
+
+
+<MudGrid>
+    <MudItem xs="8">
+        <MudPaper Class="d-flex align-center justify-center mud-width-full  mud-height-full py-8 height: 120vh">
+
+            <div class="d-none d-lg-block rounded" style="@($"color:{Colors.LightGreen.Accent3}; background:{Colors.Grey.Lighten4};");height:100%; width:90%">
+                <div>
+                    <MudChart ChartType="ChartType.Bar" ChartSeries="@Series" @bind-SelectedIndex="i" XAxisLabels="@XAxisLabels" Width="90%" Height="350px" Style="margin-left: 30px"></MudChart>
+                </div>
+            </div>
+
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="4">
+        <MudPaper Class="d-flex flex-column align-center justify-center mud-width-full py-8" style="height: 160vh">
+            <div class="d-flex flex-column align-center rounded" style="height:44%; width:90%; margin-bottom: 10px;">
+                <MudDatePicker PickerVariant="PickerVariant.Static" Date="@(DateTime.Today.AddDays(1))" />
+            </div>
+            <div class="d-none d-lg-block rounded" style="@($"color:{Colors.LightGreen.Accent3}; background:{Colors.Grey.Lighten2};");height:56%; width:90%;"></div>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+
+@code{
+
+    private int i = -1; //default value cannot be 0 -> first selectedindex is 0.
+
+    public List<ChartSeries> Series = new List<ChartSeries>()
+    {
+        new ChartSeries() { Name = "United States", Data = new double[] { 40, 20, 25, 27, 46, 60, 48, 80, 15 } },
+        new ChartSeries() { Name = "Germany", Data = new double[] { 19, 24, 35, 13, 28, 15, 13, 16, 31 } },
+        new ChartSeries() { Name = "Sweden", Data = new double[] { 8, 6, 11, 13, 4, 16, 10, 16, 18 } },
+    };
+    public string[] XAxisLabels = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep" };
+
+}
