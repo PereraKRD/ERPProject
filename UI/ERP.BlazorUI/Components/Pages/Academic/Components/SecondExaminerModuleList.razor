@@ -3,7 +3,8 @@
 @inject IViewSecondExaminerModuleByNameUseCase ViewSecondExaminerModulesByNameUseCase
 @inject NavigationManager NavigationManager
 
-<h3>Second Examiner Modules</h3>
+<MudContainer Class="result-container">
+<h3 class="result-header">Second Examiner Modules</h3>
 
 <MudExpansionPanels MultiExpansion="true">
 	@foreach (var semester in Enumerable.Range(1, 8))
@@ -26,6 +27,7 @@
 	}
 
 </MudExpansionPanels>
+</MudContainer>
 
 @code {
 	private List<ModuleOfferingSecondExaminer> _moduleSecondExaminer = new();
@@ -46,3 +48,5 @@
 		NavigationManager.NavigateTo($"/ModuleManagementTabs/{moduleOfferingId}");
 	}
 }
+
+<link rel="stylesheet" href="styles.css" />

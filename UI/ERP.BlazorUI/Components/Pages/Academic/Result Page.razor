@@ -1,6 +1,53 @@
 @page "/Results"
-<h3>Result_Page</h3>
+@using ERP.Domain.Core.Entity
+@using Microsoft.AspNetCore.Components.Authorization
+@using ERP.Application.AcademicApp.Modules.Interfaces
+@inject IViewTeacherModuleByNameUseCase ViewTeacherModuleByNameUseCase
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+<MudContainer Class="result-container">
+    <h3 class="result-header">Results</h3>
+
+    <MudExpansionPanels MultiExpansion="true">
+        @foreach (var semester in Enumerable.Range(1, 8))
+        {
+            <MudExpansionPanel Text=@($"Semester {semester:D2}") MaxHeight="1000">
+                <div class="module-list mt-4">
+                    @foreach (var moduleOffering in _moduleOfferings)
+                    {
+                        if (moduleOffering.Module.Semester == $"semester {semester:00}")
+                        {
+                            <div>
+                                <button @onclick="() => ViewEvaluationList(moduleOffering.ModuleOfferingId)">
+                                    @moduleOffering.Module.Name
+                                </button>
+                            </div>
+                        }
+                    }
+                </div>
+            </MudExpansionPanel>
+        }
+    </MudExpansionPanels>
+</MudContainer>
 
 @code {
-    
+    private List<ModuleOffering> _moduleOfferings = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadModulesAsync();
+    }
+
+    private async Task LoadModulesAsync()
+    {
+        var teacherId = 1;
+        _moduleOfferings = (await ViewTeacherModuleByNameUseCase.ExecuteAsync(teacherId)).ToList();
+    }
+
+    private void ViewEvaluationList(int moduleOfferingId)
+    {
+        NavigationManager.NavigateTo($"/EvaluationList/{moduleOfferingId}");
+    }
 }
+<link rel="stylesheet" href="styles.css" />

@@ -1,12 +1,11 @@
 @using ERP.Domain.Core.Entity
 @using ERP.Application.AcademicApp.Modules.Interfaces
 @inject IGetStudentListByModuleOfferingUseCase GetStudentListByModuleOfferingUseCase
-<h3>DisplayStudentList</h3>
 
-<p>Relevant ModuleOfferingId is : @ModuleOfferingId</p>
 
 @if (_students != null && _students.Any())
 {
+    <MudContainer Class="result-container">
     <MudTable Items="@_students">
         <HeaderContent>
             <MudTh>Reg Number</MudTh>
@@ -26,6 +25,7 @@
             <MudTablePager />
         </PagerContent>
     </MudTable>
+    </MudContainer>
 }
 else
 {
@@ -43,3 +43,4 @@ else
         _students = await GetStudentListByModuleOfferingUseCase.ExecuteAsync(ModuleOfferingId);
     }
 }
+<link rel="stylesheet" href="styles.css" />
