@@ -1,0 +1,105 @@
+﻿@page "/Dashboard"
+
+<PageTitle>Dashboard</PageTitle>
+
+
+<MudGrid>
+    <MudItem xs="8">
+        <MudPaper Class="d-flex align-center justify-center mud-width-full  mud-height-full py-8 height: 120vh">
+
+            <div class="d-none d-lg-block rounded" style="@($"color:{Colors.LightGreen.Accent3}; background:{Colors.Grey.Lighten4};");height:100%; width:90%">
+                <div>
+                    <MudChart ChartType="ChartType.Bar" ChartSeries="@Series" @bind-SelectedIndex="i" XAxisLabels="@XAxisLabels" Width="90%" Height="350px" Style="margin-left: 30px"></MudChart>
+                </div>
+            </div>
+
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="4">
+        <MudPaper Class="d-flex flex-column align-center justify-center mud-width-full py-8" style="height: 160vh">
+            <div class="d-flex flex-column align-center rounded" style="height:44%; width:90%; margin-bottom: 10px;">
+                <MudDatePicker PickerVariant="PickerVariant.Static" Date="@(DateTime.Today.AddDays(1))" />
+            </div>
+            <div class="d-none d-lg-block rounded" style="background: #f5f5f5; height: 56%; width: 90%; text-align: center;">
+                <h3>TO DO LIST</h3>
+
+                <div style="padding-left: 20px; padding-right: 20px;">
+                    <MudTextField @bind-Value="TextValue" Label="Task" Variant="Variant.Text"></MudTextField>
+                </div>
+
+                <div style="padding-left: 20px; padding-right: 20px;">
+                    <MudTextField T="DateTime?" Format="s" Label="DateTimeLocal" InputType="InputType.DateTimeLocal" @bind-Value="DateTimeValue" />
+                </div>
+
+                <div style="padding-top: 10px; padding-bottom: 20px">
+                    <MudFab OnClick="AddListItem" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Size="Size.Small" />
+                </div>
+
+                <div style="height: 350px; overflow: auto;">
+                    <MudList>
+                        @foreach (var date in dates)
+                        {
+                            var capturedDate = date; // Capturing date variable
+                            <div style="display: flex; align-items: center; width: 100%;">
+                                <div style="width: calc(100% - 72px);">
+                                    <div style="background-color: lightblue; border: 1px solid black; border-radius: 5px; margin-left: 10px;">
+                                        <MudListItem>
+                                            Task: <b>Amantha</b><br />
+                                            Date: <b>@capturedDate</b><br /> <!-- Use capturedDate here -->
+                                        </MudListItem>
+                                    </div>
+                                </div>
+                                <div style="margin-left: 10px;">
+                                    <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Delete" Size="Size.Small" Clicked="@(() => DeleteItem(date))" />
+                                </div>
+                            </div>
+                        }
+                    </MudList>
+                </div>
+
+
+
+                @code {
+                    public string TextValue = "";
+                    public DateTime? DateTimeValue { get; set; }
+                    public List<DateTime?> dates { get; set; } = new List<DateTime?>();
+
+                    public async Task AddListItem()
+                    {
+                        dates.Add(DateTimeValue);
+                        await InvokeAsync(StateHasChanged);
+                    }
+
+                    public async Task DeleteItem(DateTime? itemToDelete)
+                    {
+                        if (itemToDelete != null)
+                        {
+                            dates.Remove(itemToDelete);
+                            await InvokeAsync(StateHasChanged);
+                        }
+                    }
+                }
+
+
+
+            </div>
+        </MudPaper>
+    </MudItem>
+
+</MudGrid>
+
+
+@code{
+
+    private int i = -1; //default value cannot be 0 -> first selectedindex is 0.
+
+    public List<ChartSeries> Series = new List<ChartSeries>()
+    {
+        new ChartSeries() { Name = "United States", Data = new double[] { 40, 20, 25, 27, 46, 60, 48, 80, 15 } },
+        new ChartSeries() { Name = "Germany", Data = new double[] { 19, 24, 35, 13, 28, 15, 13, 16, 31 } },
+        new ChartSeries() { Name = "Sweden", Data = new double[] { 8, 6, 11, 13, 4, 16, 10, 16, 18 } },
+    };
+    public string[] XAxisLabels = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep" };
+
+}
