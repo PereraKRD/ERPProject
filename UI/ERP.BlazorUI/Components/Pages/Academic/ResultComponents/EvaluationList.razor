@@ -1,0 +1,53 @@
+﻿@page "/EvaluationList/{ModuleOfferingId:int}"
+
+@using ERP.Application.AcademicApp.Modules.Interfaces
+@using ERP.BlazorUI.Components.Pages.Academic.Components
+@using ERP.Domain.Core.Entity
+@inject IGetModuleOfferingByIdUseCase GetModuleOfferingByIdUseCase
+@inject ISnackbar Snackbar
+
+@if (_moduleOffering != null)
+{
+    <div class="pt-4">
+        <h3 class="result-header"> @_moduleOffering.Module.Code @_moduleOffering.Module.Name</h3>
+    </div>
+    <DisplayEvaluations ModuleOfferingId="ModuleOfferingId"></DisplayEvaluations>
+}
+else
+{
+    <p>Module offering information not found.</p>
+}
+
+
+@code {
+    [Parameter]
+    public int ModuleOfferingId { get; set; }
+
+    private ModuleOffering? _moduleOffering;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadModuleOfferingInfoAsync();
+    }
+
+    private async Task LoadModuleOfferingInfoAsync()
+    {
+        try
+        {
+            _moduleOffering = await GetModuleOfferingByIdUseCase.ExecuteAsync(ModuleOfferingId);
+        }
+        catch (Exception ex)
+        {
+            // Handle the exception
+            Console.WriteLine($"An error occurred while loading module offering: {ex.Message}");
+        }
+    }
+
+    private async Task RefreshEvaluationsAsync()
+    {
+        await LoadModuleOfferingInfoAsync();
+        StateHasChanged();
+    }
+
+}
+<link rel="stylesheet" href="styles.css" />
