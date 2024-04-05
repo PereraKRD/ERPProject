@@ -21,7 +21,7 @@
             <div class="d-flex flex-column align-center rounded" style="height:44%; width:90%; margin-bottom: 10px;">
                 <MudDatePicker PickerVariant="PickerVariant.Static" Date="@(DateTime.Today.AddDays(1))" />
             </div>
-            <div class="d-none d-lg-block rounded" style="@($"color:{Colors.LightGreen.Accent3}; background:{Colors.Grey.Lighten2};");height:56%; width:90%;"></div>
+            <div class="d-none d-lg-block rounded" style="@($"color:{Colors.Brown.Darken4}; background:{Colors.Grey.Lighten2};");height:56%; width:90%;"></div>
         </MudPaper>
     </MudItem>
 </MudGrid>
@@ -29,14 +29,14 @@
 
 @code{
 
-    private int i = -1; //default value cannot be 0 -> first selectedindex is 0.
+    private int i = -1;
 
     public List<ChartSeries> Series = new List<ChartSeries>()
     {
-        new ChartSeries() { Name = "United States", Data = new double[] { 40, 20, 25, 27, 46, 60, 48, 80, 15 } },
-        new ChartSeries() { Name = "Germany", Data = new double[] { 19, 24, 35, 13, 28, 15, 13, 16, 31 } },
-        new ChartSeries() { Name = "Sweden", Data = new double[] { 8, 6, 11, 13, 4, 16, 10, 16, 18 } },
+        new ChartSeries() { Name = "21nd Batch", Data = new double[] { 40, 65, 25, 40, 60 } },
+        new ChartSeries() { Name = "23rd Batch", Data = new double[] { 19, 24, 35, 50, 66} },
+        new ChartSeries() { Name = "22st Batch", Data = new double[] { 20, 55, 65, 13, 77, } },
     };
-    public string[] XAxisLabels = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep" };
+    public string[] XAxisLabels = { "Module 01", "Module 02", "Module 03", "Module 04", "Module 05" };
 
 }
