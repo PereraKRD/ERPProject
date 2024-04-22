@@ -1,3 +1,4 @@
+﻿@using ERP.BlazorUI.Components.Pages.Academic.Components
 @using ERP.Domain.Core.Entity
 @using ERP.Application.AcademicApp.Modules
 @using ERP.Application.AcademicApp.Modules.Interfaces
@@ -8,14 +9,12 @@
 @inject NavigationManager NavigationManager
 
 <MudContainer Class="result-container">
-
 <MudTable Items="@_evaluations">
         <HeaderContent>
             <MudTh>Name</MudTh>
             <MudTh>Type</MudTh>
             <MudTh>Out of Final Marks</MudTh>
             <MudTh>Total Marks Given</MudTh>
-            <MudTh>Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Name">
@@ -24,13 +23,9 @@
             <MudTd DataLabel="Type">@context.Type</MudTd>
             <MudTd DataLabel="Out of Final Marks">@context.FinalMarks</MudTd>
             <MudTd DataLabel="Total Marks Given">@context.Marks</MudTd>
-            <MudTd>
-                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@( () => EditEvaluation(context) )" />
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="@( () => DeleteEvaluation(context.EvaluationId) )" />
-            </MudTd>
         </RowTemplate>
     </MudTable>
-    </MudContainer>
+</MudContainer>
 
 @code {
     [Parameter]
@@ -80,7 +75,7 @@
     
     private void ViewEvaluationInformation(int moduleOfferingId,int evaluationId)
     {
-        NavigationManager.NavigateTo($"/ModuleManagementTabs/{moduleOfferingId}/{evaluationId}");
+        NavigationManager.NavigateTo($"/EvaluationMarkList/{moduleOfferingId}/{evaluationId}");
     }
 
 

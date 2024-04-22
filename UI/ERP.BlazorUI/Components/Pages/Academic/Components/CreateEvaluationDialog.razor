@@ -5,48 +5,83 @@
 
 @inject ICreateAnEvaluationToAModuleOfferingUseCase CreateAnEvaluationToAModuleOfferingUseCase
 
-<MudCard>
-    <MudForm Model="@model" @ref="@form" Validation="@(evaluationValidator.ValidateValue)"
-             ValidationDelay="0">
-        <MudCardContent>
-            <MudTextField @bind-Value="model.Name"
-                          For="@(() => model.Name)"
-                          Immediate="true"
-                          Label="Name" />
+<style>
+    .result-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 70vh;
+    }
 
-            <MudNumericField @bind-Value="model.Type"
-                             For="@(() => model.Type)"
-                             Immediate="true"
-                             Label="Type" />
+    .mud-card {
+        width: 400px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-            <MudNumericField @bind-Value="model.FinalMarks"
-                             For="@(() => model.FinalMarks)"
-                             Immediate="true"
-                             Label="Final Marks" />
+    .mud-card-content {
+        padding: 20px;
+    }
 
-            <MudNumericField @bind-Value="model.Marks"
-                             For="@(() => model.Marks)"
-                             Immediate="true"
-                             Label="Marks" />
+    .mud-form-label {
+        color: #333;
+        font-weight: bold;
+    }
 
-        </MudCardContent>
-    </MudForm>
-    <MudCardActions>
-        <MudButton Variant="Variant.Filled"
-                   Color="Color.Primary"
-                   Class="ml-auto"
-                   OnClick="@(async () => await Submit())">Add</MudButton>
-    </MudCardActions>
-</MudCard>
+    .mud-button-add {
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
 
+    .mud-card-actions {
+        display: flex;
+        justify-content: center;
+    }
+</style>
+
+<MudContainer Class="result-container">
+    <MudCard Class="mud-card">
+        <MudForm Model="@model" @ref="@form" Validation="@(evaluationValidator.ValidateValue)"
+                 ValidationDelay="0">
+            <MudCardContent Class="mud-card-content">
+                <h5 style="text-align: center;">ADD ASSIGNMENT</h5>
+                <MudTextField @bind-Value="model.Name"
+                              For="@(() => model.Name)"
+                              Immediate="true"
+                              Label="Name" />
+
+                <MudNumericField @bind-Value="model.Type"
+                                 For="@(() => model.Type)"
+                                 Immediate="true"
+                                 Label="Type" />
+
+                <MudNumericField @bind-Value="model.FinalMarks"
+                                 For="@(() => model.FinalMarks)"
+                                 Immediate="true"
+                                 Label="Final Marks" />
+
+                <MudNumericField @bind-Value="model.Marks"
+                                 For="@(() => model.Marks)"
+                                 Immediate="true"
+                                 Label="Marks" />
+            </MudCardContent>
+            <MudCardActions Class="mud-card-actions">
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Class="mud-button-add"
+                           OnClick="@(async () => await Submit())">Add</MudButton>
+            </MudCardActions>
+        </MudForm>
+    </MudCard>
+</MudContainer>
 @code {
     [Parameter]
     public int ModuleOfferingId { get; set; }
     [Parameter]
     public EventCallback onAdded { get; set; }
-    
+
     private Evaluation model = new Evaluation();
-    
+
 
     EvaluationModelValidator evaluationValidator = new EvaluationModelValidator();
     MudForm form;
@@ -60,7 +95,7 @@
                 .Length(1, 100);
 
             RuleFor(x => x.Type)
-                .InclusiveBetween(1,5);
+                .InclusiveBetween(1, 5);
 
             RuleFor(x => x.FinalMarks)
                 .InclusiveBetween(0, 100); // Assuming marks are out of 100
@@ -78,7 +113,7 @@
             return result.Errors.Select(e => e.ErrorMessage);
         };
     }
-    
+
     private async Task Submit()
     {
         await form.Validate();
@@ -86,7 +121,7 @@
         if (form.IsValid)
         {
             model.ModuleOfferingID = ModuleOfferingId;
-            await CreateAnEvaluationToAModuleOfferingUseCase.ExecuteAsync(model,ModuleOfferingId);
+            await CreateAnEvaluationToAModuleOfferingUseCase.ExecuteAsync(model, ModuleOfferingId);
             await onAdded.InvokeAsync();
         }
     }

@@ -6,7 +6,8 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 
-<h3>Module Offerings</h3>
+<MudContainer Class="result-container">
+    <h3 class="result-header">Module Offerings</h3>
 
 <MudExpansionPanels MultiExpansion="true">
     @foreach (var semester in Enumerable.Range(1, 8))
@@ -28,6 +29,7 @@
         </MudExpansionPanel>
     }
 </MudExpansionPanels>
+</MudContainer>
 
 @code {
     private List<ModuleOffering> _moduleOfferings = new();
@@ -48,3 +50,5 @@
         NavigationManager.NavigateTo($"/ModuleManagementTabs/{moduleOfferingId}");
     }
 }
+
+<link rel="stylesheet" href="styles.css" />

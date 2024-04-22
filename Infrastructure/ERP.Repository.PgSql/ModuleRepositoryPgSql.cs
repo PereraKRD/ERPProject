@@ -18,7 +18,7 @@ namespace ERP.Repository.PgSql
 		{
 			var _context = _factory.CreateDbContext();
 			return  _context.ModuleOfferings
-				.Include(mo => mo.Module) // Include related modules
+				.Include(mo => mo.Module)
 				.Where(mo => mo.Coordinator.TeacherId == id);
 			
 

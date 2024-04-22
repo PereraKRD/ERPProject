@@ -1,0 +1,17 @@
+﻿@page "/EvaluationMarkList/{ModuleOfferingId:int}/{EvaluationId:int}"
+@using ERP.Domain.Core.Entity
+@using ERP.BlazorUI.Components.Pages.Academic.Components
+
+
+<DisplayEvalutionMarks EvaluationId="EvaluationId"></DisplayEvalutionMarks>
+
+@code {
+    [Parameter]
+    public int ModuleOfferingId { get; set; }
+
+    [Parameter]
+    public int EvaluationId { get; set; }
+
+}
+
+<link rel="stylesheet" href="styles.css" />

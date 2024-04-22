@@ -8,10 +8,9 @@
 
 @if (_moduleOffering != null)
 {
-    <div class="p-2 mb-3">
-        <h3 class="pa-3"> @_moduleOffering.Module.Code @_moduleOffering.Module.Name</h3>
+    <div class="pt-4">
+        <h3 class="result-header"> @_moduleOffering.Module.Code @_moduleOffering.Module.Name</h3>
     </div>
-    <MudPaper>
         <MudTabs Outlined="true" @ref="tabs">
             <MudTabPanel Text="Assignments" Icon="@Icons.Material.Filled.Assignment" @ref="panel01">
                 <DisplayEvaluationList ModuleOfferingId="ModuleOfferingId"></DisplayEvaluationList>
@@ -26,6 +25,8 @@
                 @* Need to display the student registered to this module offering *@
             </MudTabPanel>
 
+       
+
             <MudTabPanel Text="Results" Icon="@Icons.Material.Filled.TableView" @ref="panel04">
                 <MudCard Class="mb-5">
                     <MudCardContent Style="@($"color:{Colors.Grey.Darken4}; background:{Colors.Grey.Lighten3};")">
@@ -37,7 +38,8 @@
                 </MudCard>
             </MudTabPanel>
         </MudTabs>
-    </MudPaper>
+    
+
 }
 else
 {
@@ -92,3 +94,4 @@ else
     }
 
 }
+<link rel="stylesheet" href="styles.css" />

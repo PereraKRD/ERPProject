@@ -1,0 +1,43 @@
+﻿@using ERP.Application.AcademicApp.Modules.Interfaces
+@using ERP.Domain.Core.Entity
+
+@inject IGetResultListByStudentResultUseCase GetResultListByStudentResultUseCase
+
+@if (_studentResults != null && _studentResults.Any())
+{
+	<MudContainer Class="result-container">
+		<h3 class="result-header">Evaluation Marks</h3>
+	<MudTable Items="@_studentResults">
+		<HeaderContent>
+			<MudTh>Reg Number</MudTh>
+			<MudTh>Name</MudTh>
+			<MudTh>Marks</MudTh>
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="RegNo">@context.Student.StudentId</MudTd>
+				<MudTd DataLabel="FullName">@context.Student.FirstName @context.Student.LastName </MudTd>
+				<MudTd DataLabel="Marks">@context.StudentScore</MudTd>
+			</RowTemplate>
+			<PagerContent>
+				<MudTablePager />
+			</PagerContent>
+		</MudTable>
+		</MudContainer>
+}
+else
+{
+	<p>No marks have been added to the system.</p>
+}
+
+
+@code {
+	[Parameter]
+	public int EvaluationId { get; set; }
+
+	private List<StudentResult> _studentResults = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		_studentResults = await GetResultListByStudentResultUseCase.ExecuteAsync(EvaluationId);
+	}
+}
