@@ -1,17 +1,60 @@
+@using ClosedXML.Excel
 @using ERP.Domain.Core.Entity
 @using ERP.Application.AcademicApp.Modules.Interfaces
+@using System.Data
+@inject IJSRuntime JS
 @inject IGetEvaluationByIdUseCase GetEvaluationByIdUseCase
+@inject IGetResultListByStudentResultUseCase GetResultListByStudentResultUseCase
+@inject IAddEvaluationMarksUseCase AddEvaluationMarksUseCase
+
 <h3>AddEditEvaluationMarks</h3>
 
-    <MudCard>
-        <MudContainer>
-            <MudCardContent Style="height: 400px;  background-color: lightgray;">
-            </MudCardContent>
-        </MudContainer>
-        <MudCardActions>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary">Generate Excel</MudButton>
-        </MudCardActions>
-    </MudCard>
+<MudCard>
+    <MudContainer>
+        <MudCardContent Style="height: 400px;  background-color: lightgray;">
+            @if (_studentResults != null && _studentResults.Any())
+            {
+                <MudTable Items="@_studentResults">
+                    <HeaderContent>
+                        <MudTh>Reg Number</MudTh>
+                        <MudTh>Name</MudTh>
+                        <MudTh>Marks</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="RegNo">@context.Student.StudentId</MudTd>
+                        <MudTd DataLabel="FullName">@context.Student.FirstName @context.Student.LastName </MudTd>
+                        <MudTd DataLabel="Marks">@context.StudentScore</MudTd>
+                    </RowTemplate>
+                    <PagerContent>
+                        <MudTablePager />
+                    </PagerContent>
+                </MudTable>
+            }
+            else
+            {
+                <p>No marks have been added to the system.</p>
+            }
+        </MudCardContent>
+    </MudContainer>
+    <MudCardActions>
+        <div class="btn-group">
+            <MudButton Class="m-3" Variant="Variant.Filled" Color="Color.Primary" OnClick="ExportToExcel" Style="width:200px; height:40px;" StartIcon="@Icons.Material.Filled.CloudDownload">Generate Excel</MudButton>
+            <MudFileUpload Class="m-3" T="IBrowserFile" FilesChanged="UploadFiles" Style="width:200px; height:40px;">
+                <ButtonTemplate>
+                    <MudButton HtmlTag="label"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Style="width:200px; height:40px;"
+                               StartIcon="@Icons.Material.Filled.CloudUpload"
+                               for="@context.Id">
+                        Upload Excel
+                    </MudButton>
+                </ButtonTemplate>
+            </MudFileUpload>
+            <MudButton Class="m-3" Variant="Variant.Filled" Color="Color.Primary" OnClick="Submit" Style="width:200px; height:40px;" StartIcon="@Icons.Material.Filled.Save">Save</MudButton>
+        </div>
+    </MudCardActions>
+</MudCard>
 
 
 @code {
@@ -20,6 +63,9 @@
     
     [Parameter]
     public int EvaluationId { get; set; }
+
+    [Parameter]
+    public EventCallback onAdded { get; set; }
     
     private Evaluation _evaluation;
     private List<StudentResult> _studentResults = new();
@@ -27,5 +73,99 @@
     protected override async Task OnInitializedAsync()
     {
         _evaluation = await GetEvaluationByIdUseCase.ExecuteAsync(EvaluationId);
+        _studentResults = await GetResultListByStudentResultUseCase.ExecuteAsync(EvaluationId);
+    }
+
+    protected void ExportToExcel()
+    {
+        var spreadsheetBytes = ProductsToBytes();
+        SaveSpreadSheetBytes(spreadsheetBytes);
+        GenerateExcel();
+    }
+
+    private void SaveSpreadSheetBytes(byte[] bytes)
+    {
+        File.WriteAllBytes("./wwwroot/exports/Results.xlsx", bytes);
+    }
+
+    private byte[] ProductsToBytes()
+    {
+        using var workbook = new XLWorkbook();
+
+        var dataTable = new System.Data.DataTable();
+        dataTable.Columns.Add(new DataColumn("RegNo."));
+        dataTable.Columns.Add(new DataColumn("Name"));
+        dataTable.Columns.Add(new DataColumn("Marks"));
+
+        _studentResults.ForEach(x =>
+        {
+            var newRow = dataTable.NewRow();
+            newRow["RegNo."] = x.Student.StudentId;
+            newRow["Name"] = x.Student.FirstName + " " + x.Student.LastName;
+            newRow["Marks"] = x.StudentScore;
+            dataTable.Rows.Add(newRow);
+        });
+
+        var worksheet = workbook.Worksheets.Add(dataTable, "Results");
+        using var memoryStream = new MemoryStream();
+        workbook.SaveAs(memoryStream);
+        return memoryStream.ToArray();
+    }
+
+    private async Task GenerateExcel()
+    {
+        var fileName = "Results.xlsx";
+        var fileURL = "https://localhost:7212/exports/Results.xlsx";
+        await JS.InvokeVoidAsync("triggerFileDownload", fileName, fileURL);
+    }
+
+    IBrowserFile _file;
+    private void UploadFiles(IBrowserFile file)
+    {
+        _file = file;
+        //TODO upload the files to the server
+    }
+
+    public async Task<List<StudentResult>> Import(IBrowserFile file, int evaluationId)
+    {
+        var list = new List<StudentResult>();
+        using (var stream = new MemoryStream())
+        {
+            await file.OpenReadStream().CopyToAsync(stream);
+            using (var workbook = new XLWorkbook(stream))
+            {
+                var worksheet = workbook.Worksheet(1);
+                var rowCount = worksheet.RangeUsed().RowCount();
+                for (int row = 2; row <= rowCount; row++)
+                {
+                    int studentId = Convert.ToInt32(worksheet.Cell(row, 1).Value.ToString().Trim());
+                    double studentScore = Convert.ToDouble(worksheet.Cell(row, 3).Value.ToString().Trim());
+
+                    list.Add(new StudentResult
+                        {
+                            StudentId = studentId,
+                            StudentScore = studentScore,
+                            EvaluationId = evaluationId
+                        });
+                }
+            }
+        }
+        return list;
+    }
+
+    private async Task RefreshDataTable()
+    {
+        _studentResults = await GetResultListByStudentResultUseCase.ExecuteAsync(EvaluationId);
+        StateHasChanged();
+    }
+
+    private async Task Submit()
+    {
+        var _resultList = await Import(_file, EvaluationId);
+        var studentMarks = _resultList.ToDictionary(sr => sr.StudentId, sr => sr.StudentScore);
+        await AddEvaluationMarksUseCase.ExecuteAsync(EvaluationId, studentMarks);
+        await onAdded.InvokeAsync();
+
+        await RefreshDataTable();
     }
 }

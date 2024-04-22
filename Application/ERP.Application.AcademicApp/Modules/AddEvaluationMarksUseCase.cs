@@ -16,7 +16,7 @@ public class AddEvaluationMarksUseCase : IAddEvaluationMarksUseCase
     
     public async Task ExecuteAsync(int evaluationId, IDictionary<int, double> studentMarks)
     {
-        // await _moduleRepository.AddOrUpdateMarksAsync(evaluationId, studentMarks);
+        await _moduleRepository.AddOrUpdateMarksAsync(evaluationId, studentMarks);
     }
     
 }

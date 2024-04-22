@@ -9,6 +9,7 @@
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.102.2" />
     <PackageReference Include="FluentValidation" Version="11.8.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -30,6 +31,7 @@
   <ItemGroup>
     <Folder Include="Components\Pages\Department\" />
     <Folder Include="Components\Pages\SiteAdmin\" />
+    <Folder Include="wwwroot\exports\" />
   </ItemGroup>
 
 </Project>

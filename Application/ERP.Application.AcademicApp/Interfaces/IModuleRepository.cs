@@ -12,7 +12,7 @@ public interface IModuleRepository
     Task UpdateEvaluationAsync(Evaluation evaluation);
     Task DeleteEvaluationAsync(int evaluationId);
     Task <Evaluation> GetEvaluationByIdAsync(int evaluationId);
-
+    Task AddOrUpdateMarksAsync(int evaluationId, IDictionary<int, double> studentMarks);
     Task<List<Student>> GetStudentsByModuleOfferingIdAsync(int moduleOfferingId);
 	Task<List<StudentResult>> GetResultListByEvaluationIdAsync(int evaluationId);
 
