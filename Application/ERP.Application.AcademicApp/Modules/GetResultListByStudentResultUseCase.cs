@@ -18,9 +18,9 @@ namespace ERP.Application.AcademicApp.Modules
             this.moduleRepository = moduleRepository;
         }
 
-        public async Task<List<StudentResult>> ExecuteAsync(int evaluationId)
+        public async Task<List<StudentResult>> ExecuteAsync(int studentResultId)
         {
-            return await moduleRepository.GetResultListByEvaluationIdAsync(evaluationId);
+            return await moduleRepository.GetResultListByEvaluationIdAsync(studentResultId);
         }
     }
 }

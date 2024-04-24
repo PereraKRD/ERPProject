@@ -129,7 +129,42 @@ namespace ERP.Repository.PgSql
 				?? throw new Exception($"Evaluation with ID {evaluationId} not found.");
 		}
 
-		public async Task<List<StudentResult>> GetResultListByEvaluationIdAsync(int evaluationId)
+        public async Task AddOrUpdateMarksAsync(int evaluationId, IDictionary<int, double> studentMarks)
+        {
+            using var _context = _factory.CreateDbContext();
+
+            var evaluation = await _context.Evaluations
+                .Include(ev => ev.Results)
+                .FirstOrDefaultAsync(ev => ev.EvaluationId == evaluationId);
+            if (evaluation == null)
+            {
+                throw new ArgumentException("Evaluation not found.", nameof(evaluationId));
+            }
+            foreach (var studentMark in studentMarks)
+            {
+                var studentId = studentMark.Key;
+                var mark = studentMark.Value;
+
+                var result = evaluation.Results.FirstOrDefault(r => r.StudentId == studentId);
+                if (result == null)
+                {
+                    var newResult = new StudentResult
+                    {
+                        StudentId = studentId,
+                        EvaluationId = evaluationId,
+                        StudentScore = mark,
+                    };
+                    evaluation.Results.Add(newResult);
+                }
+                else
+                {
+                    result.StudentScore = mark;
+                }
+            }
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<StudentResult>> GetResultListByEvaluationIdAsync(int evaluationId)
 		{
 			using var _context = _factory.CreateDbContext();
 			var studentResults = await _context.StudentResults
