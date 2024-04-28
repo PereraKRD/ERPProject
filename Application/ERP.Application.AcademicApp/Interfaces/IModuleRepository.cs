@@ -15,5 +15,6 @@ public interface IModuleRepository
     Task AddOrUpdateMarksAsync(int evaluationId, IDictionary<int, double> studentMarks);
     Task<List<Student>> GetStudentsByModuleOfferingIdAsync(int moduleOfferingId);
 	Task<List<StudentResult>> GetResultListByEvaluationIdAsync(int evaluationId);
+    Task TransferRegisteredStudentsAsync (int evaluationId, List<Student> students);
 
 }

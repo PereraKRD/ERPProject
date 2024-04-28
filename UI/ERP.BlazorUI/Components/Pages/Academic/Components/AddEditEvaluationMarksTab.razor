@@ -6,12 +6,14 @@
 @inject IGetEvaluationByIdUseCase GetEvaluationByIdUseCase
 @inject IGetResultListByStudentResultUseCase GetResultListByStudentResultUseCase
 @inject IAddEvaluationMarksUseCase AddEvaluationMarksUseCase
+@inject ITransferRegisteredStudentsToResultsUseCase TransferRegisteredStudentsToResultsUseCase
+@inject IGetStudentListByModuleOfferingUseCase GetStudentListByModuleOfferingUseCase
 
 <h3>AddEditEvaluationMarks</h3>
 
 <MudCard>
     <MudContainer>
-        <MudCardContent Style="height: 400px;  background-color: lightgray;">
+        <MudCardContent Style="height: 400px;  background-color: lightgrey;">
             @if (_studentResults != null && _studentResults.Any())
             {
                 <MudTable Items="@_studentResults">
@@ -33,6 +35,17 @@
             else
             {
                 <p>No marks have been added to the system.</p>
+                <MudButton Disabled="@_processing" OnClick="LoadStudents" Variant="Variant.Filled" Color="Color.Default">
+                    @if (_processing)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                        <MudText Class="ms-2">Loading</MudText>
+                    }
+                    else
+                    {
+                        <MudText>Load Registered Students</MudText>
+                    }
+                </MudButton>
             }
         </MudCardContent>
     </MudContainer>
@@ -60,20 +73,23 @@
 @code {
     [Parameter] 
     public int ModuleOfferingId { get; set; }
-    
+
     [Parameter]
     public int EvaluationId { get; set; }
 
     [Parameter]
     public EventCallback onAdded { get; set; }
-    
+
     private Evaluation _evaluation;
     private List<StudentResult> _studentResults = new();
-    
+    private List<Student> _students = new();
+    private bool _processing = false;
+
     protected override async Task OnInitializedAsync()
     {
         _evaluation = await GetEvaluationByIdUseCase.ExecuteAsync(EvaluationId);
         _studentResults = await GetResultListByStudentResultUseCase.ExecuteAsync(EvaluationId);
+        _students = await GetStudentListByModuleOfferingUseCase.ExecuteAsync(ModuleOfferingId);
     }
 
     protected void ExportToExcel()
@@ -86,6 +102,13 @@
     private void SaveSpreadSheetBytes(byte[] bytes)
     {
         File.WriteAllBytes("./wwwroot/exports/Results.xlsx", bytes);
+    }
+
+    private async Task LoadStudents()
+    {
+        await TransferRegisteredStudentsToResultsUseCase.ExecuteAsync(EvaluationId, _students);
+        await onAdded.InvokeAsync();
+        await RefreshDataTable();
     }
 
     private byte[] ProductsToBytes()
@@ -115,7 +138,7 @@
     private async Task GenerateExcel()
     {
         var fileName = "Results.xlsx";
-        var fileURL = "https://localhost:7212/exports/Results.xlsx";
+        var fileURL = "/exports/Results.xlsx";
         await JS.InvokeVoidAsync("triggerFileDownload", fileName, fileURL);
     }
 
