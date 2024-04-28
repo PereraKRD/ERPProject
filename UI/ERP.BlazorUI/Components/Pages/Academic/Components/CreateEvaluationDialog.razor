@@ -4,6 +4,8 @@
 @using ERP.Application.AcademicApp.Modules.Interfaces
 
 @inject ICreateAnEvaluationToAModuleOfferingUseCase CreateAnEvaluationToAModuleOfferingUseCase
+@inject ITransferRegisteredStudentsToResultsUseCase TransferRegisteredStudentsToResultsUseCase
+@inject IGetStudentListByModuleOfferingUseCase GetStudentListByModuleOfferingUseCase
 
 <style>
     .result-container {
@@ -81,6 +83,7 @@
     public EventCallback onAdded { get; set; }
 
     private Evaluation model = new Evaluation();
+    private List<Student> _students = new();
 
 
     EvaluationModelValidator evaluationValidator = new EvaluationModelValidator();
@@ -98,10 +101,10 @@
                 .InclusiveBetween(1, 5);
 
             RuleFor(x => x.FinalMarks)
-                .InclusiveBetween(0, 100); // Assuming marks are out of 100
+                .InclusiveBetween(0, 100);
 
             RuleFor(x => x.Marks)
-                .InclusiveBetween(0, 100); // Same assumption as above
+                .InclusiveBetween(0, 100);
         }
 
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
@@ -114,15 +117,28 @@
         };
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        _students = await GetStudentListByModuleOfferingUseCase.ExecuteAsync(ModuleOfferingId);
+    }
+
     private async Task Submit()
     {
         await form.Validate();
 
         if (form.IsValid)
         {
-            model.ModuleOfferingID = ModuleOfferingId;
-            await CreateAnEvaluationToAModuleOfferingUseCase.ExecuteAsync(model, ModuleOfferingId);
-            await onAdded.InvokeAsync();
+            try
+            {
+                model.ModuleOfferingID = ModuleOfferingId;
+                await CreateAnEvaluationToAModuleOfferingUseCase.ExecuteAsync(model, ModuleOfferingId);
+                await TransferRegisteredStudentsToResultsUseCase.ExecuteAsync(model.EvaluationId, _students);
+                await onAdded.InvokeAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
     }
 

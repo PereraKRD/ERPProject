@@ -183,17 +183,36 @@ namespace ERP.Repository.PgSql
 			return studentResults;
 		}
 
-		// public async Task AddOrUpdateMarksAsync(int evaluationId, IDictionary<int, double> studentMarks)
-		// {
-		// 	// Logic to add or update marks for the specified evaluation
-		// }
-		//
-		// public async Task<IEnumerable<StudentResult>> GetMarksByEvaluationIdAsync(int evaluationId)
-		// {
-		// 	// Logic to retrieve marks for the specified evaluation
-		// }
+		public async Task TransferRegisteredStudentsAsync(int evaluationId, List<Student> students)
+		{
+            using var _context = _factory.CreateDbContext();
 
+            var evaluation = await _context.Evaluations.FindAsync(evaluationId);
+            if (evaluation == null)
+            {
+                throw new ArgumentException("Evaluation not found.", nameof(evaluationId));
+            }
 
+            foreach (var student in students)
+            {
+				var existingResult = await _context.StudentResults
+					.FirstOrDefaultAsync(sr => sr.EvaluationId == evaluationId && sr.StudentId == student.StudentId);
+
+				if (existingResult == null)
+				{
+					var newResult = new StudentResult
+					{
+						StudentId = student.StudentId,
+						EvaluationId = evaluationId,
+						StudentScore = 0
+					};
+					_context.StudentResults.Add(newResult);
+				}
+            }
+
+            await _context.SaveChangesAsync();
+
+        }
 	}
 }
 

@@ -9,26 +9,26 @@
 <MudContainer Class="result-container">
     <h3 class="result-header">Module Offerings</h3>
 
-<MudExpansionPanels MultiExpansion="true">
-    @foreach (var semester in Enumerable.Range(1, 8))
-    {
-        <MudExpansionPanel Text=@($"Semester {semester:D2}") MaxHeight="1000">
-            <div class="mt-4">
-                @foreach (var moduleOffering in _moduleOfferings)
-                {
-                    if (moduleOffering.Module.Semester == $"semester {semester:00}")
+    <MudExpansionPanels MultiExpansion="true">
+        @foreach (var semester in Enumerable.Range(1, 8))
+        {
+            <MudExpansionPanel Text=@($"Semester {semester:D2}") MaxHeight="1000">
+                <div class="mt-4">
+                    @foreach (var moduleOffering in _moduleOfferings)
                     {
-                        <div>
-                            <button @onclick="() => ViewModuleInformation(moduleOffering.ModuleOfferingId)">
-                                @moduleOffering.Module.Name
-                            </button>
-                        </div>
+                        if (moduleOffering.Module.Semester == $"semester {semester:00}")
+                        {
+                            <div>
+                                <button @onclick="() => ViewModuleInformation(moduleOffering.ModuleOfferingId)">
+                                    @moduleOffering.Module.Name
+                                </button>
+                            </div>
+                        }
                     }
-                }
-            </div>
-        </MudExpansionPanel>
-    }
-</MudExpansionPanels>
+                </div>
+            </MudExpansionPanel>
+        }
+    </MudExpansionPanels>
 </MudContainer>
 
 @code {
